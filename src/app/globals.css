@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+:root {
+  /* Dark mode (default) */
+  --bg:           #0f0f0f;
+  --bg-card:      #1a1a1a;
+  --bg-elevated:  #222222;
+  --text:         #f0ede6;
+  --text-muted:   #888880;
+  --accent-y:     #f7c948;
+  --accent-b:     #4af0f0;
+  --accent-p:     #ff3fa4;
+  --accent-g:     #6aff8a;
+  --border:       #2a2a2a;
+
+  --font-display: 'Bebas Neue', 'Impact', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+[data-theme="light"] {
+  --bg:           #f5f5f0;
+  --bg-card:      #ffffff;
+  --bg-elevated:  #eeeeea;
+  --text:         #1a1a1a;
+  --text-muted:   #666660;
+  --border:       #e0e0da;
+}
+
+/* Grid paper background (light mode) */
+[data-theme="light"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+/* Dark mode noise */
+[data-theme="dark"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+html { scroll-behavior: auto; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  transition: background 0.4s, color 0.4s;
+}
+
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: 0.02em; }
+h4, h5, .subhead { font-family: var(--font-heading); }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent-y); border-radius: 2px; }
+
+/* Hide default cursor for custom cursor */
+@media (pointer: fine) {
+  html { cursor: none; }
+  a, button { cursor: none; }
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-y);
+  color: #000;
+}
