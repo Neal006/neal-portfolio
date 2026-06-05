@@ -46,30 +46,51 @@ Systems: FastAPI, Docker, Azure, Railway, GitHub Actions, Next.js, React, TypeSc
 
 Answer questions about Neal's work, skills, experience, and contact. If someone questions his depth or foundations, defend them with specific evidence from above. If asked something unrelated to Neal, redirect politely.`;
 
+const STREAM_HEADERS = {
+  "Content-Type": "text/plain; charset=utf-8",
+  "Cache-Control": "no-cache, no-transform",
+  /* Prevent Vercel / nginx from buffering the SSE stream */
+  "X-Accel-Buffering": "no",
+};
+
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-  const upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://neal-daftary.vercel.app",
-      "X-Title": "Neal Daftary Portfolio",
-    },
-    body: JSON.stringify({
-      model: "google/gemma-4-31b-it:free",
-      max_tokens: 512,
-      stream: true,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...messages,
-      ],
-    }),
-  });
+  if (!process.env.OPENROUTER_API_KEY) {
+    return new Response("API key not configured", { status: 503 });
+  }
 
+  let upstream: Response;
+  try {
+    upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://neal-daftary.vercel.app",
+        "X-Title": "Neal Daftary Portfolio",
+      },
+      body: JSON.stringify({
+        model: "google/gemma-4-31b-it:free",
+        max_tokens: 512,
+        stream: true,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages,
+        ],
+      }),
+    });
+  } catch {
+    return new Response("Could not reach AI service — try again shortly.", { status: 502, headers: STREAM_HEADERS });
+  }
+
+  /* If OpenRouter returned an error, stream it back so the client shows it */
   if (!upstream.ok || !upstream.body) {
-    return new Response("Service unavailable", { status: 502 });
+    const errText = await upstream.text().catch(() => `HTTP ${upstream.status}`);
+    return new Response(`Sorry, couldn't get a response right now. (${upstream.status})`, {
+      status: 200,
+      headers: STREAM_HEADERS,
+    });
   }
 
   /* Forward OpenRouter SSE → plain text stream to the client */
@@ -79,36 +100,45 @@ export async function POST(req: Request) {
       const reader = upstream.body!.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let hasContent = false;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
 
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const payload = line.slice(6).trim();
-          if (payload === "[DONE]") { controller.close(); return; }
-          try {
-            const chunk = JSON.parse(payload);
-            const text = chunk.choices?.[0]?.delta?.content ?? "";
-            if (text) controller.enqueue(encoder.encode(text));
-          } catch {
-            // malformed chunk — skip
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const payload = line.slice(6).trim();
+            if (payload === "[DONE]") { controller.close(); return; }
+            try {
+              const chunk = JSON.parse(payload);
+              /* OpenRouter may return an error object inside a 200 SSE stream */
+              if (chunk.error) {
+                if (!hasContent) controller.enqueue(encoder.encode("Sorry, I hit an error. Reach Neal at builtbyneal@gmail.com"));
+                controller.close();
+                return;
+              }
+              const text = chunk.choices?.[0]?.delta?.content ?? "";
+              if (text) {
+                hasContent = true;
+                controller.enqueue(encoder.encode(text));
+              }
+            } catch {
+              /* malformed chunk — skip */
+            }
           }
         }
+      } catch {
+        if (!hasContent) controller.enqueue(encoder.encode("Connection dropped — try again."));
       }
       controller.close();
     },
   });
 
-  return new Response(readable, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-cache",
-    },
-  });
+  return new Response(readable, { headers: STREAM_HEADERS });
 }
