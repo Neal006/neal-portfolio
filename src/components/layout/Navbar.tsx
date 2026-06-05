@@ -4,20 +4,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import { personal } from "@/data/portfolio";
 
-const navLinks = [
+const NAV = [
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
   { label: "Works", href: "#works" },
-  { label: "Resume", href: "/proofs/Neal_Daftary_Resume.pdf" },
+  { label: "Blog", href: "/blog" },
+  { label: "Resume", href: "/proofs/Neal_Daftary_Resume.pdf", external: true },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -25,107 +26,117 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 120, damping: 20 }}
-        className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12"
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10"
         style={{
-          height: scrolled ? 56 : 72,
-          background: scrolled ? "rgba(15,15,15,0.85)" : "transparent",
-          backdropFilter: scrolled ? "blur(16px)" : "none",
+          height: scrolled ? 52 : 68,
+          background: scrolled ? "rgba(10,10,10,0.94)" : "transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
           borderBottom: scrolled ? "1px solid var(--border)" : "none",
-          transition: "height 0.3s, background 0.3s, border 0.3s",
+          transition: "height 0.4s, background 0.4s, border 0.4s",
         }}
       >
-        <div className="max-w-7xl mx-auto h-full flex items-center justify-between">
-          {/* Logo */}
-          <a
-            href="#hero"
-            className="text-xl font-bold tracking-wider"
-            style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
-          >
-            {personal.name.split(" ")[0].toUpperCase()}
-            <span style={{ color: "var(--accent-y)" }}>.</span>
-          </a>
+        {/* Logo */}
+        <a
+          href="#hero"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "1.4rem",
+            letterSpacing: "0.08em",
+            color: "var(--text)",
+            textDecoration: "none",
+          }}
+        >
+          {personal.name.split(" ")[0].toUpperCase()}
+          <span style={{ color: "var(--accent-y)" }}>.</span>
+        </a>
 
-          {/* Desktop links */}
-          <div
-            className="hidden md:flex items-center gap-8"
-            style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem" }}
-          >
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                {...(!link.href.startsWith("#") ? { target: "_blank", download: true } : {})}
-                className="uppercase tracking-widest transition-colors"
-                style={{ color: "var(--text-muted)" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--accent-y)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--text-muted)")
-                }
-              >
-                {link.label}
-              </a>
-            ))}
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile burger */}
-          <button
-            className="md:hidden flex flex-col gap-1.5"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            <motion.span
-              animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              className="block w-6 h-0.5"
-              style={{ background: "var(--text)" }}
-            />
-            <motion.span
-              animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
-              className="block w-6 h-0.5"
-              style={{ background: "var(--text)" }}
-            />
-            <motion.span
-              animate={mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-              className="block w-6 h-0.5"
-              style={{ background: "var(--text)" }}
-            />
-          </button>
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center gap-8">
+          {NAV.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="link-underline"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.65rem",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+                textDecoration: "none",
+                paddingBottom: "2px",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+            >
+              {item.label}
+            </a>
+          ))}
+          <ThemeToggle />
         </div>
+
+        {/* Mobile burger */}
+        <button
+          className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8"
+          onClick={() => setOpen(!open)}
+          aria-label="Menu"
+        >
+          <motion.span
+            animate={open ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+            className="block h-px"
+            style={{ background: "var(--text)", transformOrigin: "center" }}
+          />
+          <motion.span
+            animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+            className="block h-px"
+            style={{ background: "var(--text)" }}
+          />
+          <motion.span
+            animate={open ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+            className="block h-px"
+            style={{ background: "var(--text)", transformOrigin: "center" }}
+          />
+        </button>
       </motion.nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu overlay */}
       <AnimatePresence>
-        {mobileOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 pt-20 px-8 flex flex-col gap-6 md:hidden"
+            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-40 flex flex-col justify-center px-10"
             style={{ background: "var(--bg)" }}
           >
-            {navLinks.map((link, i) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                initial={{ x: -40, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: i * 0.08 }}
-                className="text-4xl uppercase tracking-wider"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  color: "var(--text)",
-                }}
-              >
-                {link.label}
-              </motion.a>
-            ))}
-            <div className="mt-4">
+            <div className="flex flex-col gap-8">
+              {NAV.map((item, i) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  initial={{ x: -40, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
+                    letterSpacing: "0.04em",
+                    color: "var(--text)",
+                    textDecoration: "none",
+                  }}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+            </div>
+            <div className="mt-16">
               <ThemeToggle />
             </div>
           </motion.div>

@@ -1,74 +1,103 @@
 "use client";
-import { motion } from "framer-motion";
-import SplitText from "@/components/animations/SplitText";
-import { skills } from "@/data/portfolio";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { skills, achievements } from "@/data/portfolio";
+
+type SkillCategory = { label: string; color: string; items: string[] };
 
 export default function Skills() {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+  const categories = (skills as typeof skills & { categories?: SkillCategory[] }).categories;
+
   return (
     <section
       id="skills"
-      style={{
-        background: "var(--bg-card)",
-        paddingTop: "6rem",
-        paddingBottom: "6rem",
-        paddingLeft: "1.5rem",
-        paddingRight: "1.5rem",
-        overflow: "hidden",
-      }}
+      ref={ref}
+      style={{ background: "var(--bg-card)", paddingTop: "7rem", paddingBottom: "7rem", overflow: "hidden" }}
     >
-      <div style={{ maxWidth: "72rem", marginLeft: "auto", marginRight: "auto" }}>
-        {/* Section label */}
-        <div className="flex items-center gap-2 mb-12">
-          <div className="w-8 h-px" style={{ background: "var(--accent-y)" }} />
-          <span
+      {/* Section header */}
+      <div
+        className="flex items-center justify-between px-6 md:px-10 mb-14"
+        style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.6rem",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+          }}
+        >
+          02 — Skills
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.6rem",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+          }}
+        >
+          {skills.software.length} Technologies
+        </span>
+      </div>
+
+      <div className="px-6 md:px-10">
+        {/* Title row */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <h2
             style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
-              color: "var(--text-muted)",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(3rem, 7vw, 6rem)",
+              lineHeight: 0.9,
+              color: "var(--text)",
             }}
           >
-            Skills & Achievements
-          </span>
+            TECH
+            <br />
+            <span style={{ WebkitTextStroke: "2px var(--text)", color: "transparent" }}>
+              STACK
+            </span>
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "0.875rem",
+              color: "var(--text-muted)",
+              lineHeight: 1.7,
+              maxWidth: "36ch",
+            }}
+          >
+            The tools I reach for to build production AI systems — from model training to deployment.
+          </p>
         </div>
 
-        {/* Tech Stack — compact pill grid */}
-        <SplitText
-          text="Tech Stack"
-          as="h2"
-          type="chars"
-          stagger={0.07}
-          className="mb-6"
-          style={{ fontFamily: "var(--font-display)", fontSize: "3rem" }}
-        />
-        <div className="flex flex-wrap gap-2.5 mb-14">
+        {/* Pills */}
+        <div className="flex flex-wrap gap-2 mb-16">
           {skills.software.map((s, i) => (
             <motion.div
               key={s.name}
-              initial={{ y: 20, opacity: 0, scale: 0.85 }}
-              whileInView={{ y: 0, opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{
-                delay: i * 0.05,
-                type: "spring",
-                stiffness: 300,
-                damping: 18,
-              }}
-              whileHover={{ y: -4, scale: 1.08 }}
-              className="flex items-center gap-2 rounded-full cursor-default"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={inView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.1 + i * 0.03, type: "spring", stiffness: 300 }}
+              whileHover={{ y: -3, scale: 1.06 }}
+              className="flex items-center gap-2 rounded cursor-default"
               style={{
-                background: `${s.color}12`,
-                border: `1.5px solid ${s.color}40`,
-                padding: "8px 16px",
+                background: `${s.color}10`,
+                border: `1px solid ${s.color}35`,
+                padding: "7px 14px",
               }}
-              title={s.name}
             >
-              <span className="text-base leading-none">{s.icon}</span>
+              <span style={{ fontSize: "0.9rem", lineHeight: 1 }}>{s.icon}</span>
               <span
-                className="text-xs font-semibold"
                 style={{
                   fontFamily: "var(--font-mono)",
+                  fontSize: "0.65rem",
+                  letterSpacing: "0.08em",
+                  fontWeight: 700,
                   color: s.color,
                 }}
               >
@@ -78,36 +107,104 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Bottom row: Core Areas + Achievements side by side */}
+        {/* Expertise areas */}
+        {categories && (
+          <div className="mb-14">
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
+                color: "var(--text)",
+                marginBottom: "1.5rem",
+              }}
+            >
+              EXPERTISE
+            </h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {categories.map((cat, ci) => (
+                <motion.div
+                  key={cat.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.2 + ci * 0.07 }}
+                  className="rounded"
+                  style={{
+                    background: "var(--bg)",
+                    border: `1px solid ${cat.color}25`,
+                    padding: "18px",
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: cat.color }} />
+                    <p
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "0.58rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.16em",
+                        textTransform: "uppercase",
+                        color: cat.color,
+                      }}
+                    >
+                      {cat.label}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {cat.items.map((item) => (
+                      <span
+                        key={item}
+                        style={{
+                          fontFamily: "var(--font-body)",
+                          fontSize: "0.75rem",
+                          color: "var(--text-muted)",
+                          background: `${cat.color}0d`,
+                          border: `1px solid ${cat.color}18`,
+                          borderRadius: "var(--radius-sm)",
+                          padding: "3px 8px",
+                        }}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Bottom: core areas + achievements */}
         <div className="grid md:grid-cols-2 gap-12">
-          {/* Core Areas */}
           <div>
             <h3
-              className="mb-5"
-              style={{ fontFamily: "var(--font-display)", fontSize: "2rem" }}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1.8rem",
+                color: "var(--text)",
+                marginBottom: "1rem",
+              }}
             >
-              Core Areas
+              CORE AREAS
             </h3>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2">
               {skills.personal.map((trait, i) => (
                 <motion.span
                   key={trait}
-                  initial={{ x: -20, opacity: 0 }}
-                  whileInView={{ x: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  whileHover={{
-                    scale: 1.06,
-                    background: "var(--accent-y)",
-                    color: "#000",
-                  }}
-                  className="rounded-full text-xs border cursor-default transition-colors"
+                  initial={{ opacity: 0 }}
+                  animate={inView ? { opacity: 1 } : {}}
+                  transition={{ delay: 0.3 + i * 0.07 }}
+                  whileHover={{ background: "var(--accent-y)", color: "#fff", borderColor: "var(--accent-y)" }}
                   style={{
-                    borderColor: "var(--border)",
-                    fontFamily: "var(--font-heading)",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.65rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
                     color: "var(--text-muted)",
-                    fontWeight: 600,
-                    padding: "8px 18px",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius-sm)",
+                    padding: "8px 16px",
+                    cursor: "default",
+                    transition: "all 0.2s",
                   }}
                 >
                   {trait}
@@ -116,36 +213,43 @@ export default function Skills() {
             </div>
           </div>
 
-          {/* Achievements */}
           <div>
             <h3
-              className="mb-5"
-              style={{ fontFamily: "var(--font-display)", fontSize: "2rem" }}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1.8rem",
+                color: "var(--text)",
+                marginBottom: "1rem",
+              }}
             >
-              Achievements
+              ACHIEVEMENTS
             </h3>
-            <div className="space-y-2.5">
-              {[
-                "🏆 Winner (Aubergine Track) & Top 5 Finalist – HACKaMINeD National Hackathon 2026",
-                "🥉 4th National Rank – Mitsubishi Electric Cup",
-              ].map((a, i) => (
+            <div className="space-y-2">
+              {achievements.slice(0, 5).map((a, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, type: "spring" }}
-                  className="flex items-center gap-2 text-xs rounded-lg"
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.2 + i * 0.08 }}
+                  className="flex items-start gap-3"
                   style={{
                     background: "var(--bg-elevated)",
-                    fontFamily: "var(--font-body)",
-                    color: "var(--text)",
                     border: "1px solid var(--border)",
+                    borderRadius: "var(--radius-sm)",
                     padding: "10px 14px",
-                    lineHeight: 1.5,
                   }}
                 >
-                  {a}
+                  <span style={{ color: "var(--accent-y)", fontSize: "0.6rem", marginTop: "2px" }}>✦</span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.75rem",
+                      color: "var(--text-muted)",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {a}
+                  </span>
                 </motion.div>
               ))}
             </div>

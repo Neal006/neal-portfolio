@@ -1,208 +1,332 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import TornEdge from "@/components/animations/TornEdge";
-import MarqueeStrip from "@/components/animations/MarqueeStrip";
-import { personal } from "@/data/portfolio";
+import { motion } from "framer-motion";
+import { personal, stats } from "@/data/portfolio";
+
+const ROLES = ["AI Engineer", "CV Specialist", "RAG Architect", "IEEE Researcher", "Open to Work"];
 
 export default function Hero() {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const yearRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [chars, setChars] = useState(ROLES[0].length);
+  const [deleting, setDeleting] = useState(false);
 
+  /* Typewriter */
   useEffect(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    const role = ROLES[roleIdx];
+    const t = setTimeout(
+      () => {
+        if (!deleting && chars < role.length) {
+          setChars((c) => c + 1);
+        } else if (!deleting && chars === role.length) {
+          setTimeout(() => setDeleting(true), 1800);
+        } else if (deleting && chars > 0) {
+          setChars((c) => c - 1);
+        } else if (deleting && chars === 0) {
+          setDeleting(false);
+          setRoleIdx((r) => (r + 1) % ROLES.length);
+        }
+      },
+      deleting ? 45 : 80
+    );
+    return () => clearTimeout(t);
+  }, [chars, deleting, roleIdx]);
 
-    tl.fromTo(
-      titleRef.current,
-      { scale: 0.55, opacity: 0, y: 60 },
-      { scale: 1, opacity: 1, y: 0, duration: 1.2 }
-    )
-      .fromTo(
-        yearRef.current,
-        { scale: 0, rotation: -20 },
-        { scale: 1, rotation: -8, duration: 0.6 },
-        "-=0.5"
-      )
-      .fromTo(
-        ".hero-tagline span",
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.1, duration: 0.5 },
-        "-=0.3"
-      )
-      .fromTo(
-        ".hero-cta",
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.4 },
-        "-=0.2"
+  /* GSAP intro */
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".hero-line",
+        { yPercent: 120, opacity: 0 },
+        { yPercent: 0, opacity: 1, stagger: 0.12, duration: 1, ease: "power4.out", delay: 0.1 }
       );
-
-    // Floating star particles
-    gsap.to(".hero-star", {
-      y: "random(-20, 20)",
-      x: "random(-15, 15)",
-      rotation: "random(-30, 30)",
-      duration: "random(2, 4)",
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      stagger: 0.4,
+      gsap.fromTo(
+        ".hero-meta",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, stagger: 0.08, duration: 0.7, ease: "power3.out", delay: 0.7 }
+      );
     });
-
-    return () => {
-      tl.kill();
-    };
+    return () => ctx.revert();
   }, []);
-
-  const starPositions = [
-    "top-[10%] left-[5%]",
-    "top-[8%] right-[12%]",
-    "top-[20%] right-[5%]",
-    "bottom-[35%] left-[3%]",
-    "bottom-[25%] right-[6%]",
-    "top-[40%] left-[15%]",
-    "bottom-[45%] right-[15%]",
-  ];
 
   return (
     <section
-      ref={sectionRef}
       id="hero"
-      className="relative flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: "var(--bg)", minHeight: "100vh", paddingBottom: "120px" }}
+      className="relative flex flex-col"
+      style={{ background: "var(--bg)", minHeight: "100vh", overflow: "hidden" }}
     >
-      {/* Decorative stars */}
-      {starPositions.map((pos, i) => (
-        <svg
-          key={i}
-          className={`hero-star absolute ${pos}`}
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <polygon
-            points="12,2 14.5,9 22,9 16,14 18.5,21 12,16.5 5.5,21 8,14 2,9 9.5,9"
-            fill="none"
-            stroke="var(--accent-y)"
-            strokeWidth="1.5"
-          />
-        </svg>
-      ))}
-
-      {/* Accent blobs */}
+      {/* ── Keyword-rich machine-readable summary (hidden, crawlable) ── */}
+      <p className="sr-only">
+        Neal Daftary is an AI and Machine Learning Engineer and undergraduate researcher at
+        Nirma University, Ahmedabad, India, pursuing B.Tech in CSE (Artificial Intelligence &amp;
+        Machine Learning). He specialises in Computer Vision, Large Language Model engineering,
+        RAG pipeline architecture, and production AI system deployment. Neal interned as an AI
+        Engineer at 8xSports, building a 645ms visual jersey search engine with YOLOv8, DINOv2,
+        and FAISS. He interned as an AI Software Engineer at MZHub Faithtech, shipping a Next.js
+        web platform with Azure Cosmos DB. He is currently an ISRO-funded undergraduate researcher
+        at Nirma University, developing deep learning pipelines on Chandrayaan-2 TMC-2 and OHRC
+        lunar imagery. He is a published IEEE Sensors Letters author (2026), Student Chairperson
+        of ACM ITNU, and national hackathon winner at HACKaMINeD 2026.
+      </p>
+      {/* Top status bar */}
       <div
-        className="absolute top-0 left-0 w-40 h-40 opacity-70"
-        style={{
-          background: "#f7c948",
-          clipPath: "polygon(0 0, 60% 0, 100% 40%, 0 100%)",
-        }}
-      />
-      <div
-        className="absolute bottom-28 right-0 w-32 h-48 opacity-60"
-        style={{
-          background: "#ff3fa4",
-          clipPath: "polygon(30% 0, 100% 0, 100% 100%, 0 70%)",
-        }}
-      />
-      <div
-        className="absolute top-1/4 right-1/4 w-24 h-24 rounded-full opacity-20"
-        style={{
-          background: "#4af0f0",
-          filter: "blur(40px)",
-        }}
-      />
-
-      <div className="relative z-10 text-center px-4" style={{ marginTop: "-40px" }}>
-        {/* Year badge */}
-        <div
-          ref={yearRef}
-          className="inline-block mb-4"
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "1.1rem",
-            fontWeight: 700,
-            background: "var(--bg)",
-            color: "var(--text)",
-            border: "2px solid var(--text)",
-            borderRadius: "40px",
-            padding: "4px 18px",
-            transform: "rotate(-8deg)",
-            display: "inline-block",
-          }}
-        >
-          {new Date().getFullYear()}
-        </div>
-
-        {/* Main title */}
-        <h1
-          ref={titleRef}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(5rem, 18vw, 16rem)",
-            lineHeight: 0.9,
-            letterSpacing: "0.02em",
-            color: "var(--text)",
-          }}
-        >
-          NEAL <span style={{ color: "var(--accent-y)" }}>D</span>AFTARY
-        </h1>
-
-        {/* Tagline */}
-        <p
-          className="hero-tagline mt-3"
-          style={{
-            fontFamily: "var(--font-heading)",
-            color: "var(--text-muted)",
-            letterSpacing: "0.15em",
-          }}
-        >
-          {[
-            "Computer Vision",
-            "✦",
-            "Research",
-            "✦",
-            "Full-Stack AI",
-          ].map((w, i) => (
-            <span
-              key={i}
-              style={{
-                color: i % 2 === 1 ? "var(--accent-y)" : "inherit",
-              }}
-            >
-              {w}{" "}
-            </span>
-          ))}
-        </p>
-
-        {/* CTA */}
-        <div className="hero-cta mt-8">
-          <a
-            href="#works"
-            className="inline-block px-8 py-3 rounded-full font-bold tracking-widest uppercase text-sm transition-transform hover:scale-105"
+        className="hero-meta absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-6 md:px-10"
+        style={{ marginTop: "80px", opacity: 0 }}
+      >
+        <div className="flex items-center gap-3">
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full"
             style={{
-              background: "var(--text)",
-              color: "var(--bg)",
               fontFamily: "var(--font-mono)",
+              fontSize: "0.6rem",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--accent-y)",
+              border: "1px solid var(--accent-y)",
+              padding: "4px 12px",
             }}
           >
-            View Works →
-          </a>
+            <span
+              className="inline-block w-1.5 h-1.5 rounded-full animate-pulse"
+              style={{ background: "var(--accent-y)" }}
+            />
+            Available for work
+          </span>
+        </div>
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.6rem",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+          }}
+        >
+          Ahmedabad, India — {new Date().getFullYear()}
+        </p>
+      </div>
+
+      {/* Main headline block */}
+      <div
+        className="flex-1 flex flex-col justify-center px-6 md:px-10 pt-28 pb-8"
+        style={{ gap: "0" }}
+      >
+        {/* Single h1 — two visually distinct spans for SEO + design */}
+        <h1
+          ref={headRef}
+          style={{ margin: 0, padding: 0, fontWeight: "inherit", lineHeight: 1 }}
+        >
+          <div style={{ overflow: "hidden" }}>
+            <span
+              className="hero-line"
+              style={{
+                display: "block",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(5.5rem, 20vw, 18rem)",
+                lineHeight: 0.88,
+                letterSpacing: "0.01em",
+                color: "var(--text)",
+                opacity: 0,
+              }}
+            >
+              NEAL
+            </span>
+          </div>
+          <div style={{ overflow: "hidden" }}>
+            <span
+              className="hero-line"
+              style={{
+                display: "block",
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(5.5rem, 20vw, 18rem)",
+                lineHeight: 0.88,
+                letterSpacing: "0.01em",
+                color: "transparent",
+                WebkitTextStroke: "2px var(--text)",
+                opacity: 0,
+              }}
+            >
+              DAFTARY
+            </span>
+          </div>
+        </h1>
+
+        {/* Divider row */}
+        <div
+          className="hero-meta flex items-center justify-between mt-8 md:mt-10"
+          style={{ borderTop: "1px solid var(--border)", paddingTop: "20px", opacity: 0 }}
+        >
+          {/* Typewriter role */}
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "clamp(0.7rem, 1.2vw, 0.9rem)",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+              minWidth: "220px",
+            }}
+          >
+            {ROLES[roleIdx].slice(0, chars)}
+            <span
+              className="inline-block w-px h-3 ml-0.5 align-middle animate-pulse"
+              style={{ background: "var(--accent-y)" }}
+            />
+          </div>
+
+          {/* Stats row */}
+          <div className="hidden md:flex items-center gap-10">
+            {stats.map((s) => (
+              <div key={s.label} className="text-right">
+                <p
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.6rem",
+                    lineHeight: 1,
+                    color: "var(--accent-y)",
+                  }}
+                >
+                  {s.value}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.5rem",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "var(--text-muted)",
+                    marginTop: "2px",
+                  }}
+                >
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Scroll hint */}
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.6rem",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+              writingMode: "vertical-rl",
+            }}
+          >
+            scroll
+          </motion.div>
         </div>
       </div>
 
-      {/* Marquee — placed at the very bottom, not overlapping content */}
+      {/* Bottom marquee — two bidirectional rows */}
       <div
-        className="absolute bottom-0 w-full"
-        style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
+        className="hero-meta"
+        style={{
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
+          padding: "0",
+          overflow: "hidden",
+          opacity: 0,
+        }}
       >
-        <MarqueeStrip
-          items={[
-            "Research",
-            "Computer Vision",
-            "Full-Stack AI",
-          ]}
-          className="py-3"
-        />
+        {/* Row 1 — scrolls left: skills & roles */}
+        {(() => {
+          const row1 = ["AI & ML Engineer", "·", "Computer Vision", "·", "RAG / LLM Systems", "·", "ISRO Research", "·", "IEEE Published", "·", "HACKaMINeD Winner", "·", "Nirma University", "·", "8xSports", "·", "MZHub Faithtech", "·", "Ahmedabad, India", "·"];
+          const doubled = [...row1, ...row1];
+          return (
+            <div
+              style={{ borderBottom: "1px solid var(--border)", padding: "11px 0", overflow: "hidden" }}
+            >
+              <div className="marquee-track marquee-track-fast flex gap-10">
+                {doubled.map((item, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.62rem",
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: item === "·" ? "var(--accent-y)" : "var(--text-muted)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Row 2 — scrolls right: achievements & metrics */}
+        {(() => {
+          const row2 = ["20+ Projects", "·", "IEEE Published", "·", "1 yr Experience", "·", "12+ Freelance", "·", "Track Winner 2026", "·", "4th National 2026", "·", "ACM Chairperson", "·", "LeetCode 1507", "·", "Open to Work", "·", "YOLOv8 · DINOv2", "·"];
+          const doubled = [...row2, ...row2];
+          return (
+            <div style={{ padding: "11px 0", overflow: "hidden" }}>
+              <div className="marquee-track-reverse flex gap-10">
+                {doubled.map((item, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.62rem",
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color: item === "·" ? "var(--accent-y)" : "var(--text-muted)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* Corner decorations */}
+      <div
+        className="hero-meta absolute bottom-16 left-6 md:left-10"
+        style={{ opacity: 0 }}
+      >
+        <a
+          href="#works"
+          className="inline-flex items-center gap-3 group"
+          style={{ textDecoration: "none" }}
+        >
+          <motion.div
+            whileHover={{ rotate: 45 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="rounded-full flex items-center justify-center"
+            style={{
+              width: 44,
+              height: 44,
+              border: "1px solid var(--border)",
+              color: "var(--text)",
+              fontSize: "1.2rem",
+            }}
+          >
+            ↓
+          </motion.div>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.6rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+            }}
+          >
+            View Works
+          </span>
+        </a>
       </div>
     </section>
   );

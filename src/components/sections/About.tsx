@@ -1,164 +1,165 @@
 "use client";
-import { motion } from "framer-motion";
-import SplitText from "@/components/animations/SplitText";
-import ScrollZoom from "@/components/animations/ScrollZoom";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import TextScramble from "@/components/animations/TextScramble";
 import { personal } from "@/data/portfolio";
 
-const contactItems = [
-  { icon: "📧", label: personal.contact.email, color: "#4af0f0" },
-  { icon: "📱", label: personal.contact.phone, color: "#6aff8a" },
-  { icon: "🐙", label: personal.contact.github, color: "#f0ede6" },
-  { icon: "🔗", label: "LinkedIn", color: "#0077B5" },
+const FACTS = [
+  { label: "Location", value: "Ahmedabad, India" },
+  { label: "University", value: "Nirma University" },
+  { label: "Degree", value: "B.Tech CSE (AI & ML)" },
+  { label: "CGPA", value: "7.77 / 10" },
+  { label: "JEE Mains", value: "97.62 percentile" },
+  { label: "LeetCode", value: "Rating 1507" },
 ];
 
 export default function About() {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const [hovered, setHovered] = useState<number | null>(null);
+
   return (
     <section
       id="about"
-      style={{
-        background: "var(--bg)",
-        paddingTop: "6rem",
-        paddingBottom: "6rem",
-        paddingLeft: "1.5rem",
-        paddingRight: "1.5rem",
-      }}
+      ref={ref}
+      style={{ background: "var(--bg)", paddingTop: "7rem", paddingBottom: "7rem", overflow: "hidden" }}
     >
-      <div style={{ maxWidth: "72rem", marginLeft: "auto", marginRight: "auto" }}>
-        {/* Section label */}
-        <div className="flex items-center gap-2 mb-12">
-          <div className="w-8 h-px" style={{ background: "var(--accent-y)" }} />
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
-              color: "var(--text-muted)",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-            }}
-          >
-            About Me
-          </span>
-        </div>
+      <p className="sr-only">
+        Neal Daftary — AI &amp; ML Engineer based in Ahmedabad, India. B.Tech CSE student
+        specialising in Artificial Intelligence and Machine Learning at the Institute of Technology,
+        Nirma University (2024–2028). JEE Mains 2024: 97.62 percentile. Former AI Intern at
+        8xSports (Computer Vision, YOLOv8, DINOv2, FAISS, visual search engine). Former AI
+        Software Engineering Intern at MZHub Faithtech (Next.js, Azure Cosmos DB, RAG chatbot
+        R&amp;D). ISRO-funded researcher on Chandrayaan-2 lunar imagery segmentation. IEEE Sensors
+        Letters author. ACM ITNU Student Chairperson.
+      </p>
 
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Polaroid photo */}
-          <ScrollZoom fromScale={0.75} className="flex justify-center">
-            <motion.div
-              initial={{ rotate: -6 }}
-              whileHover={{ rotate: 0, scale: 1.04 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className="relative inline-block"
+      {/* Section header */}
+      <div
+        className="flex items-center justify-between px-6 md:px-10 mb-14"
+        style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}
+      >
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+          01 — About
+        </span>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+          Neal Daftary
+        </span>
+      </div>
+
+      <div className="px-6 md:px-10">
+        {/* Headline */}
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(3rem, 7vw, 6rem)",
+            lineHeight: 1,
+            letterSpacing: "0.01em",
+            color: "var(--text)",
+            marginBottom: "2.5rem",
+          }}
+        >
+          Building AI systems that
+          <br />
+          <span style={{ color: "var(--accent-y)" }}>actually ship.</span>
+        </motion.h2>
+
+        <div className="grid md:grid-cols-12 gap-10 md:gap-16 items-start">
+          {/* Left: Bio */}
+          <motion.div
+            className="md:col-span-7"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.15 }}
+          >
+            <p
               style={{
-                background: "white",
-                padding: "16px 16px 48px",
-                boxShadow: "6px 8px 40px rgba(0,0,0,0.45)",
-                border: "1px solid #ddd",
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(0.95rem, 1.4vw, 1.05rem)",
+                lineHeight: 1.85,
+                color: "var(--text-muted)",
+                marginBottom: "2.5rem",
               }}
             >
-              {/* Sticky tape top corners */}
-              {[-30, 30].map((rot, i) => (
-                <div
+              {personal.bio}
+            </p>
+
+            {/* Contact tiles */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.35 }}
+              className="grid grid-cols-2 gap-3"
+            >
+              {[
+                { icon: "→", label: personal.contact.email, href: `mailto:${personal.contact.email}` },
+                { icon: "→", label: `@${personal.contact.github}`, href: `https://github.com/${personal.contact.github}` },
+                { icon: "→", label: "LinkedIn", href: `https://linkedin.com/in/${personal.contact.linkedin}` },
+                { icon: "→", label: personal.contact.phone, href: `tel:${personal.contact.phone}` },
+              ].map((item, i) => (
+                <motion.a
                   key={i}
-                  className={`absolute ${
-                    i === 0 ? "-top-4 left-6" : "-top-4 right-6"
-                  }`}
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  onMouseEnter={() => setHovered(i)}
+                  onMouseLeave={() => setHovered(null)}
+                  className="flex items-center gap-3 rounded-lg"
                   style={{
-                    width: 40,
-                    height: 14,
-                    background: "rgba(247,201,72,0.7)",
-                    transform: `rotate(${rot}deg)`,
-                    borderRadius: 2,
+                    padding: "14px 16px",
+                    background: hovered === i ? "var(--accent-y)" : "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    textDecoration: "none",
+                    transition: "background 0.25s, border-color 0.25s",
+                    borderColor: hovered === i ? "var(--accent-y)" : "var(--border)",
                   }}
-                />
-              ))}
-              <div
-                className="w-64 h-72 overflow-hidden rounded-sm"
-                style={{ background: "var(--bg-elevated)" }}
-              >
-                <img
-                  src="/images/avatar.png"
-                  alt={personal.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Sticker decorations */}
-              <div
-                className="absolute -top-5 -left-5 text-4xl"
-                style={{ transform: "rotate(-15deg)" }}
-              >
-                🤖
-              </div>
-              <div
-                className="absolute -bottom-4 -right-4 text-3xl"
-                style={{ transform: "rotate(10deg)" }}
-              >
-                🧠
-              </div>
-              {/* Name caption */}
-              <p
-                className="text-center mt-3 text-sm font-bold"
-                style={{
-                  color: "#1a1a1a",
-                  fontFamily: "var(--font-heading)",
-                }}
-              >
-                {personal.name}
-              </p>
-            </motion.div>
-          </ScrollZoom>
-
-          {/* Text content */}
-          <div>
-            <SplitText
-              text="Hello!"
-              as="h2"
-              type="chars"
-              stagger={0.08}
-              variant="mask-reveal"
-              className="mb-6"
-              style={{ fontFamily: "var(--font-heading)", fontSize: "4.5rem", fontWeight: 800 }}
-            />
-
-            <SplitText
-              text={personal.bio}
-              as="p"
-              type="words"
-              stagger={0.04}
-              className="mb-8"
-              style={{ fontSize: "1.125rem", lineHeight: 1.7, color: "var(--text-muted)" }}
-            />
-
-            {/* Contact badges */}
-            <div className="grid grid-cols-2 gap-3">
-              {contactItems.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, type: "spring" }}
-                  whileHover={{ scale: 1.04, x: 4 }}
-                  className="flex items-center gap-3 rounded-xl"
-                  style={{
-                    background: "var(--bg-card)",
-                    border: `1px solid ${item.color}33`,
-                    padding: "12px 16px",
-                  }}
+                  whileHover={{ x: 4 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 >
-                  <span className="text-xl">{item.icon}</span>
-                  <span
-                    className="text-xs truncate"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      color: item.color,
-                    }}
-                  >
-                    {item.label}
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: hovered === i ? "#fff" : "var(--accent-y)", transition: "color 0.2s" }}>
+                    {item.icon}
                   </span>
-                </motion.div>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.08em", color: hovered === i ? "#fff" : "var(--text)", transition: "color 0.2s", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <TextScramble text={item.label} trigger={hovered === i} speed={4} />
+                  </span>
+                </motion.a>
               ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right: Quick facts */}
+          <motion.div
+            className="md:col-span-5"
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+          >
+            <div style={{ marginBottom: "12px" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.55rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+                Quick Facts
+              </span>
             </div>
-          </div>
+            {FACTS.map((f, i) => (
+              <motion.div
+                key={f.label}
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.3 + i * 0.06 }}
+                className="flex items-center justify-between py-3"
+                style={{ borderBottom: "1px solid var(--border)" }}
+              >
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+                  {f.label}
+                </span>
+                <span style={{ fontFamily: "var(--font-heading)", fontSize: "0.8rem", fontWeight: 600, color: "var(--text)" }}>
+                  {f.value}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>
