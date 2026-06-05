@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: "https://nealdaftary.com/sitemap.xml",
-    host: "https://nealdaftary.com",
+    sitemap: "https://neal-daftary.vercel.app/sitemap.xml",
+    host: "https://neal-daftary.vercel.app",
   };
 }

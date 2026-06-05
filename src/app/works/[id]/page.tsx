@@ -4,7 +4,7 @@ import { works } from "@/data/portfolio";
 import { workDetails } from "@/data/workDetails";
 import WorkDetail from "./WorkDetail";
 
-const BASE = "https://nealdaftary.com";
+const BASE = "https://neal-daftary.vercel.app";
 
 export function generateStaticParams() {
   return works.map((w) => ({ id: w.id }));

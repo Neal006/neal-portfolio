@@ -39,8 +39,8 @@ const SEO = {
   title: "Neal Daftary — AI & ML Engineer | Computer Vision · LLM · RAG Systems",
   description:
     "Neal Daftary — AI & ML Engineer, Ahmedabad. B.Tech CSE (AI & ML) at Nirma University. Builds production Computer Vision, RAG chatbots & LLM systems. ISRO researcher. IEEE published. HACKaMINeD 2026 winner.",
-  url: "https://nealdaftary.com",
-  image: "https://nealdaftary.com/og",
+  url: "https://neal-daftary.vercel.app",
+  image: "https://neal-daftary.vercel.app/og",
 };
 
 export const viewport: Viewport = {
