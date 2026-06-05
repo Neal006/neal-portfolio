@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 const SYSTEM_PROMPT = `You are Neal Daftary's personal AI portfolio assistant, embedded in his portfolio. Be sharp, direct, and confident — you represent someone who ships real work. Keep responses under 150 words unless asked for more detail. Never be sycophantic.
 
 ## Who Neal Is
@@ -54,7 +56,13 @@ const STREAM_HEADERS = {
 };
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  let messages = [];
+  try {
+    const body = await req.json();
+    messages = body.messages || [];
+  } catch (e) {
+    return new Response("Invalid JSON body", { status: 400 });
+  }
 
   if (!process.env.OPENROUTER_API_KEY) {
     return new Response("API key not configured", { status: 503 });
