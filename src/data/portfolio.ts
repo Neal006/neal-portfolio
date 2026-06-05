@@ -113,7 +113,7 @@ export const experience = [
     company: "8xSports",
     role: "AI Engineer Intern (Remote)",
     description:
-      "Built a production visual jersey search engine for 8xSports: YOLOv8 object detection + DINOv2 384-dim feature extraction + LBP texture analysis + FAISS vector index across 301 athlete profiles at 645ms end-to-end latency. Concurrently published IEEE Sensors Letters paper on CatBoost-driven anomaly detection in industrial robotic arms — 97.20% precision, F1 0.9718 on 200K+ CASPER samples. Earned a Letter of Recommendation.",
+      "Built a production visual jersey search engine for 8xSports: YOLOv8 object detection + DINOv2 384-dim feature extraction + LBP texture analysis + FAISS vector index across 301 athlete profiles at 645ms end-to-end latency.",
     accentColor: "#f7c948",
   },
   {
