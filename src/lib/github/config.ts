@@ -21,3 +21,16 @@ export const ORG_NAMES: Record<string, string> = {
 };
 
 export const orgName = (login: string): string => ORG_NAMES[login] ?? login;
+
+/** Orgs left out of the open-source section (PR timeline, leaderboard, counts). */
+export const HIDDEN_ORGS: readonly string[] = [
+  "Priyanshu-byte-coder",
+  "trh-ds",
+  "curriculo-tech",
+  "agentscope-ai",
+  "langchain-ai",
+  "Project-HAMi",
+  "bcherny",
+  "xai-org",
+  "nasa",
+];

@@ -77,7 +77,7 @@ export default function Hero({ stats }: { stats: HeroStats }) {
     <section id="top" className="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
       <HeroCanvas />
 
-      <div className="wrap grid grid-cols-2 gap-6 pt-28 md:grid-cols-4 md:pt-32">
+      <div className="wrap grid grid-cols-2 gap-6 pt-28 md:grid-cols-3 md:pt-32">
         <FadeIn play={play} delay={0.5} className="eyebrow">
           <span className="block text-[var(--text-faint)]">Role</span>
           <span className="text-[var(--text)]">{personal.role}</span>
@@ -86,15 +86,11 @@ export default function Hero({ stats }: { stats: HeroStats }) {
           <span className="block text-[var(--text-faint)]">Based in</span>
           <span className="text-[var(--text)]">Ahmedabad, IN · <Clock timeZone={personal.timezone} /> IST</span>
         </FadeIn>
-        <FadeIn play={play} delay={0.7} className="eyebrow">
+        <FadeIn play={play} delay={0.7} className="eyebrow col-span-2 md:col-span-1 md:text-right">
           <span className="block text-[var(--text-faint)]">Currently</span>
           <span className="inline-flex items-center gap-2 text-[var(--text)]">
             <span className="pulse-dot" /> {personal.status}
           </span>
-        </FadeIn>
-        <FadeIn play={play} delay={0.8} className="eyebrow md:text-right">
-          <span className="block text-[var(--text-faint)]">Also</span>
-          <span className="text-[var(--text)]">Chair, ACM Nirma</span>
         </FadeIn>
       </div>
 

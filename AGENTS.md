@@ -1,5 +1,5 @@
 # AGENTS.md — Project Memory (auto-maintained)
-Last updated: 2026-10-08 | Sessions logged: 1
+Last updated: 2026-10-08 | Sessions logged: 2
 
 ## Identity
 Neal Daftary's personal portfolio (neal-daftary.vercel.app) — recruiters/engineers read it; content comes from the resume PDF + live GitHub (Neal006).
@@ -20,7 +20,7 @@ Next.js 16 (App Router, Turbopack, React Compiler) · React 19 · TS · Tailwind
 page.tsx (server, ISR 6h) → getGithubData() → [live GraphQL if GITHUB_TOKEN | src/data/github-snapshot.json] → stats.ts derives streaks/OSS summary/languages → props to client sections.
 Static content: src/data/profile.ts (resume) + projects.ts (curated overrides over projects.generated.ts).
 Intro choreography: Preloader → markIntroDone() (hooks/useIntro.ts) → Hero letters animate.
-Section order: Hero → Manifesto(marquee) → 01 Work → 02 OpenSource(#upstream) → 03 GithubActivity(#activity) → 04 Experience → 05 Recognition → 06 Contact(+footer).
+Section order: Hero → 00 About → 01 Work(bento) → 02 OpenSource(#upstream) → 03 GithubActivity(#activity) → 04 Experience → 05 Recognition → 06 Contact(+footer).
 Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from the same data files.
 
 ## File Map
@@ -36,7 +36,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - scripts/sync-github.ts — regenerates src/data/github-snapshot.json
 - src/data/profile.ts — personal, experience, ossHighlights, publication, achievements, leadership, skills, LOR_URL
 - src/data/projects.generated.ts — 38 repo write-ups (from READMEs); projects.ts — OVERRIDES, FEATURED order, projectCategories
-- src/components/sections/Hero.tsx (+HeroCanvas WebGL2 contour shader), Manifesto, Work (+ProjectArt seeded SVG, ProjectIndex), OpenSource, GithubActivity, Experience, Recognition, Contact
+- src/components/sections/Hero.tsx (+HeroCanvas WebGL2 lit perspective terrain: cursor light/bloom, click ripples u_clicks[4], scroll tilt), About (avatar sticker + about.ts code card), Work (bento LAYOUT on lg 6-col grid, +ProjectIndex); hidden journey orgs = HIDDEN_ORGS in lib/github/config.ts, OpenSource, GithubActivity, Experience, Recognition, Contact
 - src/components/layout/Navbar, Preloader, CustomCursor, Chatbot(+Loader), ScrollProgress, ClientShell
 - src/components/ui/Reveal.tsx (Reveal, MaskText), SectionHeader.tsx; animations/CountUp, MagneticButton
 
@@ -63,6 +63,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - 2026-10-08 — Generated project art (seeded SVG) instead of screenshots — consistent, zero assets.
 
 ## Changelog
+2026-10-08 | About section, bento Work, hidden orgs, reactive 3D hero shader | About, Work, Hero, HeroCanvas, page.tsx, lib/github/config.ts; -Manifesto, -ProjectArt | shader normals via dFdx/dFdy + cursor-following light; pointer listeners on window, disabled for reduced motion
 2026-10-08 | Review fixes (a11y, hydration, ISR, chat input) | Navbar, Hero, HeroCanvas, Preloader, CountUp, lib/github/index.ts, lib/chatMessages.ts, api/chat | runtime GitHub failure rethrows to keep last good ISR page; chat roles whitelisted + capped
 2026-10-08 | Portfolio v2 rebuild from new resume + GitHub | src/**, scripts/sync-github.ts, next.config.ts | data layer tested; design system replaced
 
