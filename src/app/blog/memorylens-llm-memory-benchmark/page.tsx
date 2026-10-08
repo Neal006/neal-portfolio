@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "MemoryLens: Benchmarking LLM Memory Decay Across 100 Conversation Turns",
   description:
-    "Neal Daftary built MemoryLens — the open-source benchmark for LLM memory decay. Compares Naive, RAG, Chunked RAG, Cascading Temporal, and SummaryMemory architectures across 100 conversation turns. Cascading Temporal achieves 5.45× recall/token vs naive truncation.",
+    "Neal Daftary built MemoryLens: the open-source benchmark for LLM memory decay. Compares Naive, RAG, Chunked RAG, Cascading Temporal, and SummaryMemory architectures across 100 conversation turns. Cascading Temporal achieves 5.45× recall/token vs naive truncation.",
   keywords: [
     "LLM memory benchmark",
     "RAG memory decay",
@@ -167,7 +167,7 @@ export default function MemoryLensPost() {
       {/* The problem */}
       <h2 style={h2Style}>THE PROBLEM WITH LLM MEMORY</h2>
       <p style={prose}>
-        LLMs forget. When a conversation exceeds the context window, tokens get dropped — and the
+        LLMs forget. When a conversation exceeds the context window, tokens get dropped, and the
         model loses facts it was told 30 messages ago. Naive truncation (just dropping old tokens)
         is the default behaviour in most production chatbots. RAG-based memory retrieves relevant
         chunks instead of dropping them blindly. But how much better is it, really, at turn 50?
@@ -192,14 +192,14 @@ export default function MemoryLensPost() {
       {/* Metrics */}
       <h2 style={h2Style}>EVALUATION METRICS</h2>
       <p style={prose}>
-        All five metrics are computed without requiring an API key — content-based evaluation only:
+        All five metrics are computed without requiring an API key. Content-based evaluation only:
       </p>
       <div style={codeBlock}>
-        {`Recall@T         — Is the fact present in retrieved context at turn T?
-Precision@K      — What fraction of retrieved chunks are relevant?
-Temporal Drift   — How much stale/contaminated content leaks through?
-Memory Noise     — Ratio of irrelevant content in the context window.
-Cascade Efficiency — Recall improvement per token consumed.`}
+        {`Recall@T         : Is the fact present in retrieved context at turn T?
+Precision@K      : What fraction of retrieved chunks are relevant?
+Temporal Drift   : How much stale/contaminated content leaks through?
+Memory Noise     : Ratio of irrelevant content in the context window.
+Cascade Efficiency : Recall improvement per token consumed.`}
       </div>
 
       {/* Results */}
@@ -211,7 +211,7 @@ Cascade Efficiency — Recall improvement per token consumed.`}
         than naive truncation</strong>. Naive truncation bottoms out at 31% recall.
       </p>
       <p style={{ ...prose, marginTop: "1rem" }}>
-        SummaryMemory showed high recall but suffered from hallucination drift — the LLM-generated
+        SummaryMemory showed high recall but suffered from hallucination drift: the LLM-generated
         summaries introduced factual contamination at scale, making it unreliable for high-stakes
         applications.
       </p>
@@ -230,7 +230,7 @@ Cascade Efficiency — Recall improvement per token consumed.`}
       <p style={prose}>
         MemoryLens is fully open-source. It ships with 24 integration tests, CI via GitHub Actions
         (Python 3.10–3.11), a Streamlit dashboard, and supports Groq, OpenAI, Anthropic, OpenRouter,
-        and Ollama as LLM backends — no API key required for the content-based metrics path.
+        and Ollama as LLM backends, no API key required for the content-based metrics path.
       </p>
       <div style={{ marginTop: "2rem" }}>
         <a
@@ -277,7 +277,7 @@ Cascade Efficiency — Recall improvement per token consumed.`}
             color: "var(--text-muted)",
           }}
         >
-          Written by <span itemProp="name">Neal Daftary</span> —{" "}
+          Written by <span itemProp="name">Neal Daftary</span>,{" "}
           <span itemProp="jobTitle">AI & ML Engineer</span>,{" "}
           <span itemProp="affiliation">Nirma University, Ahmedabad</span>
         </p>

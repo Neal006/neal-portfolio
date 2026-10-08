@@ -49,7 +49,7 @@ export default function Contact({ syncedAt }: { syncedAt: string }) {
 
         <div className="mt-14 flex flex-col gap-10 md:mt-20 md:flex-row md:items-end md:justify-between">
           <Reveal className="max-w-md text-lg leading-relaxed text-[var(--text-muted)]">
-            Internships, open-source collabs, or a hard problem you want shipped — my inbox is open and I reply fast.
+            Internships, open-source collabs, or a hard problem you want shipped? My inbox is open and I reply fast.
           </Reveal>
           <Reveal delay={0.1}>
             <MagneticButton
@@ -81,7 +81,7 @@ export default function Contact({ syncedAt }: { syncedAt: string }) {
         </ul>
 
         <footer className="flex flex-col gap-3 border-t border-[var(--border)] py-8 eyebrow md:flex-row md:items-center md:justify-between">
-          <span>© {new Date(syncedAt).getUTCFullYear()} {personal.name} — {personal.location}</span>
+          <span>© {new Date(syncedAt).getUTCFullYear()} {personal.name} · {personal.location}</span>
           <span>
             Designed & engineered by hand · GitHub data synced{" "}
             {new Date(syncedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}

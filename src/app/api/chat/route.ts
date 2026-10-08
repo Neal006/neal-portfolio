@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       }),
     });
   } catch {
-    return new Response("Could not reach AI service — try again shortly.", { status: 502, headers: STREAM_HEADERS });
+    return new Response("Could not reach AI service. Try again shortly.", { status: 502, headers: STREAM_HEADERS });
   }
 
   /* If OpenRouter returned an error, stream it back so the client shows it */
@@ -93,12 +93,12 @@ export async function POST(req: Request) {
                 controller.enqueue(encoder.encode(text));
               }
             } catch {
-              /* malformed chunk — skip */
+              /* malformed chunk, skip */
             }
           }
         }
       } catch {
-        if (!hasContent) controller.enqueue(encoder.encode("Connection dropped — try again."));
+        if (!hasContent) controller.enqueue(encoder.encode("Connection dropped. Try again."));
       }
       controller.close();
     },

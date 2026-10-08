@@ -29,9 +29,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const SEO = {
-  title: "Neal Daftary — Software & AI Engineer · Open-Source Contributor",
+  title: "Neal Daftary | Software & AI Engineer · Open-Source Contributor",
   description:
-    "Neal Daftary — Software & AI Engineer from Ahmedabad. SWE intern at Curriculo; merged contributor to Google DeepMind, Hugging Face Transformers, OpenCV, Anthropic and Cloudflare. IEEE-published, HACKaMINeD 2026 winner.",
+    "Neal Daftary, Software & AI Engineer from Ahmedabad. SWE intern at Curriculo; merged contributor to Google DeepMind, Hugging Face Transformers, OpenCV, Anthropic and Cloudflare. IEEE-published, HACKaMINeD 2026 winner.",
   url: personal.site,
   image: `${personal.site}/og`,
 };
@@ -117,8 +117,8 @@ const jsonLd = {
         "Next.js", "NestJS", "FastAPI", "PostgreSQL", "Kubernetes", "AWS", "JAX", "PyTorch",
       ],
       award: [
-        "Winner, Aubergine Track — HACKaMINeD National Hackathon 2026",
-        "National Rank 4 — Mitsubishi Electric Cup 2026",
+        "Winner, Aubergine Track, HACKaMINeD National Hackathon 2026",
+        "National Rank 4, Mitsubishi Electric Cup 2026",
       ],
     },
     {

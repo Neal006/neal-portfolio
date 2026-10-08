@@ -4,9 +4,9 @@ import type { Project, ProjectCategory } from "./types";
 /* Resume-sourced facts and showcase extras layered over the README write-ups. */
 const OVERRIDES: Record<string, Partial<Project>> = {
   minutes: {
-    tagline: "AI meeting notes delivered 9–28 s after the call ends — at $0 AI cost.",
+    tagline: "AI meeting notes delivered 9–28 s after the call ends, at $0 AI cost.",
     description:
-      "An AI meeting-notes app that streams audio to Groq Whisper and extracts summaries, decisions and action items with free OpenRouter LLMs. A free-model-only guard, per-call provenance logging, fallback chains and a silent-audio filter keep AI spend at $0 — verified against OpenRouter's own records.",
+      "An AI meeting-notes app that streams audio to Groq Whisper and extracts summaries, decisions and action items with free OpenRouter LLMs. A free-model-only guard, per-call provenance logging, fallback chains and a silent-audio filter keep AI spend at $0, verified against OpenRouter's own records.",
     highlights: [
       "Summaries, decisions and action items 9–28 s after a meeting ends",
       "$0 AI cost: free-model guard, provenance logging, fallback chains, silent-audio filter",
@@ -39,7 +39,7 @@ const OVERRIDES: Record<string, Partial<Project>> = {
   },
   spectrascan: {
     title: "SpectraScan",
-    tagline: "Industrial paint-defect vision system — DINOv2 segmentation wired to a PLC.",
+    tagline: "Industrial paint-defect vision system: DINOv2 segmentation wired to a PLC.",
     award: "National Rank 4 · Mitsubishi Electric Cup 2026",
     metric: { value: "#4", label: "nationally, factory automation" },
   },

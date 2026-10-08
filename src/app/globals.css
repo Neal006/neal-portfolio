@@ -56,7 +56,7 @@ body {
   font-feature-settings: "ss01", "cv11";
 }
 
-/* Film grain over everything — subtle, GPU-cheap */
+/* Film grain over everything: subtle, GPU-cheap */
 body::after {
   content: "";
   position: fixed;

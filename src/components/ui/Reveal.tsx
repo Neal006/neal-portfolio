@@ -34,7 +34,7 @@ interface MaskTextProps {
   stagger?: number;
 }
 
-/** Each word slides up from behind a mask — the editorial headline reveal.
+/** Each word slides up from behind a mask, the editorial headline reveal.
     The wrapper is what's observed: the words themselves start clipped by
     their masks, so an observer on them would never fire. */
 export function MaskText({ text, className, delay = 0, stagger = 0.06 }: MaskTextProps) {

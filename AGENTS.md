@@ -41,6 +41,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - src/components/ui/Reveal.tsx (Reveal, MaskText), SectionHeader.tsx; animations/CountUp, MagneticButton
 
 ## Conventions
+- No em dashes in any copy, comments or prompts (user preference): use commas, colons, parentheses, ' | ' in titles, en dash only in date ranges.
 - Colors only via CSS vars; ember (#ff5b23) is the single accent. Dark-only (no next-themes).
 - New section = SectionHeader(index,label,title,accent) + `wrap` container + Reveal/MaskText.
 - Responsive grids need explicit `grid-cols-1` base (implicit auto tracks overflowed on mobile).
@@ -63,6 +64,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - 2026-10-08 — Generated project art (seeded SVG) instead of screenshots — consistent, zero assets.
 
 ## Changelog
+2026-10-08 | Remove all em dashes; octopus avatar.jpg replaces avatar.png | 19 src files, About.tsx, profile.ts, public/images | avatar frame is aspect-square + object-cover
 2026-10-08 | About section, bento Work, hidden orgs, reactive 3D hero shader | About, Work, Hero, HeroCanvas, page.tsx, lib/github/config.ts; -Manifesto, -ProjectArt | shader normals via dFdx/dFdy + cursor-following light; pointer listeners on window, disabled for reduced motion
 2026-10-08 | Review fixes (a11y, hydration, ISR, chat input) | Navbar, Hero, HeroCanvas, Preloader, CountUp, lib/github/index.ts, lib/chatMessages.ts, api/chat | runtime GitHub failure rethrows to keep last good ISR page; chat roles whitelisted + capped
 2026-10-08 | Portfolio v2 rebuild from new resume + GitHub | src/**, scripts/sync-github.ts, next.config.ts | data layer tested; design system replaced

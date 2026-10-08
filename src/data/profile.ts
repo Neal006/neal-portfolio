@@ -10,20 +10,20 @@ export const personal = {
   timezone: "Asia/Kolkata",
   status: "SWE Intern @ Curriculo",
   pitch:
-    "I build AI products end to end — from the model to the Kubernetes cluster — and fix the open-source libraries they run on.",
+    "I build AI products end to end, from the model to the Kubernetes cluster, and fix the open-source libraries they run on.",
   email: "nealdaftary0405@gmail.com",
   github: "Neal006",
   githubUrl: "https://github.com/Neal006",
   linkedinUrl: "https://www.linkedin.com/in/neal-daftary-45743731a/",
   resume: "/proofs/Neal_Daftary_Resume.pdf",
   site: "https://neal-daftary.vercel.app",
-  photo: "/images/avatar.png",
+  photo: "/images/avatar.jpg",
 };
 
 export const education = {
   school: "Nirma University",
   degree: "B.Tech in Computer Science & Engineering (AI & ML)",
-  period: "2024 — 2028",
+  period: "2024 – 2028",
   detail: "CGPA 7.7 (through 4th semester)",
   location: "Ahmedabad, India",
 };
@@ -32,7 +32,7 @@ export const experience: Role[] = [
   {
     company: "Curriculo",
     role: "Software Engineering Intern",
-    period: "Aug 2026 — Present",
+    period: "Aug 2026 – Present",
     location: "Remote",
     current: true,
     url: "https://curriculo.me/",
@@ -47,7 +47,7 @@ export const experience: Role[] = [
   {
     company: "MZHubtech",
     role: "Software Engineering Intern",
-    period: "Oct 2025 — Dec 2025",
+    period: "Oct 2025 – Dec 2025",
     location: "Remote",
     url: "https://www.mzhub.in/",
     points: [
@@ -59,7 +59,7 @@ export const experience: Role[] = [
   {
     company: "8xSports",
     role: "AI Engineering Intern",
-    period: "Jun 2025 — Sep 2025",
+    period: "Jun 2025 – Sep 2025",
     location: "Remote",
     url: "https://www.8xsports.in/",
     points: [
@@ -90,7 +90,7 @@ export const ossHighlights: OssHighlight[] = [
     org: "Google DeepMind",
     project: "TORAX",
     summary:
-      "Rebuilt the Plotly animation slider — 2.5× faster render and a 76% smaller payload, closing an issue open since 2024.",
+      "Rebuilt the Plotly animation slider: 2.5× faster render and a 76% smaller payload, closing an issue open since 2024.",
     prs: prs("google-deepmind/torax", [2318]),
   },
   {
@@ -103,7 +103,7 @@ export const ossHighlights: OssHighlight[] = [
     org: "OpenCV",
     project: "OpenCV",
     summary:
-      "Made 4 functions — SIFT, inpaint, matchTemplate, findTransformECC — accept boolean masks by relaxing outdated type checks.",
+      "Made 4 functions (SIFT, inpaint, matchTemplate, findTransformECC) accept boolean masks by relaxing outdated type checks.",
     prs: prs("opencv/opencv", [29676, 29677, 29679, 29681]),
   },
   {
@@ -160,9 +160,9 @@ export const achievements = [
 export const leadership = {
   role: "Student Chairperson",
   org: "Nirma University ACM Student Chapter",
-  period: "Sep 2025 — Present",
+  period: "Sep 2025 – Present",
   summary:
-    "Leading a 150+ member tech community — launched Prompt to Prototype, a one-day AI build challenge, and mentorship tracks.",
+    "Leading a 150+ member tech community; launched Prompt to Prototype, a one-day AI build challenge, and mentorship tracks.",
 };
 
 export const skills: { group: string; items: string[] }[] = [

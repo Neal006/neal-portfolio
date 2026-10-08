@@ -19,7 +19,7 @@ function rememberIntro(): void {
   try {
     sessionStorage.setItem(SEEN_KEY, "1");
   } catch {
-    /* private mode — the intro will simply replay */
+    /* private mode, the intro will simply replay */
   }
 }
 
@@ -66,7 +66,7 @@ export default function Preloader() {
         >
           <div className="flex justify-between eyebrow">
             <span>Neal Daftary</span>
-            <span>Portfolio — v2</span>
+            <span>Portfolio · v2</span>
           </div>
           <div className="flex items-end justify-between gap-6">
             <p className="serif text-[clamp(1.5rem,3vw,2.5rem)] text-[var(--text-muted)] max-w-md leading-tight">

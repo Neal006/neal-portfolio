@@ -51,7 +51,7 @@ export default function OpenSource({ summary, prs }: OpenSourceProps) {
           aside={
             <>
               I read other people&apos;s code for fun, then fix it. Public PRs into repos with a combined{" "}
-              <span className="text-[var(--text)]">{formatStars(summary.mergedRepoStars)}★</span> — reviewed and merged by
+              <span className="text-[var(--text)]">{formatStars(summary.mergedRepoStars)}★</span>, reviewed and merged by
               their maintainers.
             </>
           }

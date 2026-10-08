@@ -6,7 +6,7 @@ let lenisInstance: Lenis | null = null;
 
 export function useLenis() {
   useEffect(() => {
-    /* Honour prefers-reduced-motion — skip smooth scroll entirely */
+    /* Honour prefers-reduced-motion, skip smooth scroll entirely */
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     lenisInstance = new Lenis({

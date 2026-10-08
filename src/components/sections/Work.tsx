@@ -107,7 +107,7 @@ export default function Work() {
           label="Selected work"
           title="Things I've"
           accent="shipped."
-          aside="A few favourites I'm proud of. Everything else — side projects, hackathons and experiments — lives in the index below."
+          aside="A few favourites I'm proud of. Everything else (side projects, hackathons and experiments) lives in the index below."
         />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
           {featuredProjects.map((p, i) => (

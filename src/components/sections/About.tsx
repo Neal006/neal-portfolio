@@ -11,7 +11,7 @@ const NERD_OUT = ["computer vision", "how LLMs remember", "open source", "Rust",
 /* Each entry is one line of the fake source file; `t` = token kind for colouring. */
 type Tok = { t: "k" | "p" | "s" | "c" | "x"; v: string };
 const CODE: Tok[][] = [
-  [{ t: "c", v: "// about.ts — the honest version" }],
+  [{ t: "c", v: "// about.ts: the honest version" }],
   [{ t: "k", v: "const " }, { t: "x", v: "neal" }, { t: "p", v: " = {" }],
   [{ t: "x", v: "  home: " }, { t: "s", v: '"Ahmedabad, IN"' }, { t: "p", v: "," }],
   [{ t: "x", v: "  studying: " }, { t: "s", v: '"CSE (AI & ML) @ Nirma"' }, { t: "p", v: "," }],
@@ -77,7 +77,7 @@ export default function About() {
         </Reveal>
 
         <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-20">
-          {/* Avatar — a little sticker you can poke */}
+          {/* Avatar, a little sticker you can poke */}
           <Reveal className="mx-auto w-full max-w-[22rem] lg:sticky lg:top-28 lg:max-w-none">
             <motion.figure
               className="relative"
@@ -85,14 +85,14 @@ export default function About() {
               whileHover={{ rotate: 0, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 200, damping: 16 }}
             >
-              <div className="overflow-hidden rounded-[28px] border-[6px] border-[var(--text)] bg-[#8ecfee] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
+              <div className="aspect-square overflow-hidden rounded-[28px] border-[6px] border-[var(--text)] bg-[#141416] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
                 <Image
                   src={personal.photo}
-                  alt="Illustrated portrait of Neal — glasses, a small smile, white shirt"
-                  width={720}
-                  height={710}
+                  alt="A nerdy octopus in glasses typing code on a laptop at a late-night desk"
+                  width={460}
+                  height={460}
                   sizes="(min-width: 1024px) 34vw, 22rem"
-                  className="h-auto w-full"
+                  className="h-full w-full object-cover"
                 />
               </div>
               <motion.span
@@ -104,7 +104,7 @@ export default function About() {
                 hi, that&apos;s me!
               </motion.span>
               <figcaption className="eyebrow mt-5 text-center !normal-case !tracking-normal">
-                fig. 1 — neal, probably fixing a bug
+                fig. 1: neal (artist&apos;s impression), probably fixing a bug
               </figcaption>
             </motion.figure>
           </Reveal>
@@ -131,7 +131,7 @@ export default function About() {
                 <span className="serif text-[var(--text)]">actually</span> works.
               </p>
               <p>
-                I love the small, satisfying moments in software — a red test turning green, a weird bug finally making sense, a
+                I love the small, satisfying moments in software: a red test turning green, a weird bug finally making sense, a
                 model leaving the notebook and quietly helping someone. When a tool I use breaks, sending a tiny fix back to it
                 is my favourite kind of thank-you.
               </p>

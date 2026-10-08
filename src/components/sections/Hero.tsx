@@ -101,7 +101,7 @@ export default function Hero({ stats }: { stats: HeroStats }) {
           {personal.pitch}
         </FadeIn>
         <h1 className="display text-[clamp(4.6rem,24vw,19.5rem)] md:text-[clamp(4.6rem,19vw,19.5rem)]">
-          <span className="sr-only">{personal.name} — {personal.role}</span>
+          <span className="sr-only">{personal.name}, {personal.role}</span>
           <span className="flex">
             <Letters word={personal.first} delay={0.05} play={play} />
           </span>

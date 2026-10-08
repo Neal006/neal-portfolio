@@ -70,7 +70,7 @@ export default function SolvAiPost() {
       <h2 style={h2Style}>THE ORIGINAL PIPELINE (AND ITS PROBLEM)</h2>
       <p style={prose}>
         GPT-3.5-turbo is excellent at NLU but catastrophically expensive when every
-        customer call goes through it. FMCG complaint volumes are high — thousands of calls daily —
+        customer call goes through it. FMCG complaint volumes are high (thousands of calls daily),
         meaning the cost model doesn&apos;t survive contact with production traffic.
       </p>
 
@@ -102,7 +102,7 @@ Dual TTS: ElevenLabs (primary) → pyttsx3 (fallback)`}
       </p>
       <p style={{ ...prose, marginTop: "1rem" }}>
         The 6-state FSM ensures predictable state transitions. Agentic loops with LLMs are
-        powerful but unpredictable — for a voice interaction where every second counts, a
+        powerful but unpredictable. For a voice interaction where every second counts, a
         deterministic FSM with LLM generation only at the response layer gives you the best
         of both worlds.
       </p>
@@ -122,7 +122,7 @@ Dual TTS: ElevenLabs (primary) → pyttsx3 (fallback)`}
 
       <div style={{ marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid var(--border)" }} itemProp="author" itemScope itemType="https://schema.org/Person">
         <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--text-muted)" }}>
-          Written by <span itemProp="name">Neal Daftary</span> — <span itemProp="jobTitle">AI & ML Engineer</span>, <span itemProp="affiliation">Nirma University, Ahmedabad</span>
+          Written by <span itemProp="name">Neal Daftary</span>, <span itemProp="jobTitle">AI & ML Engineer</span>, <span itemProp="affiliation">Nirma University, Ahmedabad</span>
         </p>
       </div>
     </article>
