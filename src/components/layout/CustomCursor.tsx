@@ -1,95 +1,79 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+
+/* Dot + lagging ring. The ring swells over links/buttons and shows a label
+   for elements with data-cursor-label="View". Fine pointers only. */
+
+const RING_EASE = 0.16;
+const INTERACTIVE = "a, button, [data-cursor], [data-cursor-label]";
+
+const noopSubscribe = () => () => {};
+const canUseCursor = () =>
+  window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export default function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [label, setLabel] = useState("");
+  const dot = useRef<HTMLDivElement>(null);
+  const ring = useRef<HTMLDivElement>(null);
+  const [label, setLabel] = useState<string | null>(null);
+  const [active, setActive] = useState(false);
+  const enabled = useSyncExternalStore(noopSubscribe, canUseCursor, () => false);
 
   useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (!enabled) return;
+    document.documentElement.classList.add("has-cursor");
 
-    const dot = dotRef.current!;
-    const ring = ringRef.current!;
+    const pos = { x: -100, y: -100 };
+    const lag = { x: -100, y: -100 };
+    let raf = 0;
 
-    const move = (e: MouseEvent) => {
-      gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.08, ease: "none" });
-      gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.28, ease: "power2.out" });
+    const onMove = (e: PointerEvent) => {
+      pos.x = e.clientX;
+      pos.y = e.clientY;
+      if (dot.current) dot.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+      const el = (e.target as Element | null)?.closest?.(INTERACTIVE) ?? null;
+      setActive(el !== null);
+      setLabel(el?.getAttribute("data-cursor-label") ?? null);
+    };
+    const loop = () => {
+      lag.x += (pos.x - lag.x) * RING_EASE;
+      lag.y += (pos.y - lag.y) * RING_EASE;
+      if (ring.current) ring.current.style.transform = `translate3d(${lag.x}px, ${lag.y}px, 0)`;
+      raf = requestAnimationFrame(loop);
     };
 
-    const onEnter = (e: Event) => {
-      const el = e.currentTarget as HTMLElement;
-      const text = el.dataset.cursor ?? "";
-      setLabel(text);
-      gsap.to(ring, { scale: text ? 3.5 : 2, borderColor: "var(--accent-y)", duration: 0.25 });
-      gsap.to(dot, { scale: 0, duration: 0.2 });
-    };
-
-    const onLeave = () => {
-      setLabel("");
-      gsap.to(ring, { scale: 1, borderColor: "rgba(242,242,242,0.45)", duration: 0.25 });
-      gsap.to(dot, { scale: 1, duration: 0.2 });
-    };
-
-    window.addEventListener("mousemove", move);
-
-    const attach = () => {
-      document.querySelectorAll("a, button, [data-cursor]").forEach((el) => {
-        el.addEventListener("mouseenter", onEnter);
-        el.addEventListener("mouseleave", onLeave);
-      });
-    };
-
-    attach();
-    const obs = new MutationObserver(attach);
-    obs.observe(document.body, { childList: true, subtree: true });
-
+    window.addEventListener("pointermove", onMove, { passive: true });
+    raf = requestAnimationFrame(loop);
     return () => {
-      window.removeEventListener("mousemove", move);
-      obs.disconnect();
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
+      document.documentElement.classList.remove("has-cursor");
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
+  const size = label ? 88 : active ? 52 : 30;
 
   return (
     <>
       <div
-        ref={dotRef}
-        className="fixed top-0 left-0 z-[9999] pointer-events-none mix-blend-difference"
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: "50%",
-          background: "var(--text)",
-          transform: "translate(-50%, -50%)",
-        }}
-      />
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 z-[9998] pointer-events-none flex items-center justify-center"
-        style={{
-          width: 36,
-          height: 36,
-          borderRadius: "50%",
-          border: "1.5px solid rgba(242,242,242,0.45)",
-          transform: "translate(-50%, -50%)",
-        }}
+        ref={ring}
+        aria-hidden
+        className="pointer-events-none fixed left-0 top-0 z-[9998] mix-blend-difference"
       >
-        {label && (
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.45rem",
-              color: "#000",
-              fontWeight: 700,
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {label}
-          </span>
-        )}
+        <div
+          className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border transition-[width,height,background-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
+          style={{
+            width: size,
+            height: size,
+            borderColor: "#eeece7",
+            background: label ? "#eeece7" : "transparent",
+          }}
+        >
+          {label && <span className="font-mono text-[10px] uppercase tracking-widest text-black">{label}</span>}
+        </div>
+      </div>
+      <div ref={dot} aria-hidden className="pointer-events-none fixed left-0 top-0 z-[9999]">
+        <div className="h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--ember)]" />
       </div>
     </>
   );

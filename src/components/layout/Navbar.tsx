@@ -1,143 +1,105 @@
 "use client";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ThemeToggle from "./ThemeToggle";
-import { personal } from "@/data/portfolio";
+import { personal } from "@/data/profile";
 
-const NAV = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Works", href: "#works" },
-  { label: "Blog", href: "/blog" },
-  { label: "Resume", href: "/proofs/Neal_Daftary_Resume.pdf", external: true },
+const LINKS = [
+  { href: "#work", label: "Work" },
+  { href: "#upstream", label: "Open Source" },
+  { href: "#activity", label: "Activity" },
+  { href: "#experience", label: "Experience" },
+  { href: "#contact", label: "Contact" },
 ];
+const EASE = [0.76, 0, 0.24, 1] as const;
+const HIDE_AFTER_PX = 160;
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    setHidden(y > HIDE_AFTER_PX && y > prev);
+  });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    document.body.style.overflow = open ? "hidden" : "";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   return (
     <>
       <motion.nav
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10"
-        style={{
-          height: scrolled ? 52 : 68,
-          background: scrolled ? "rgba(10,10,10,0.94)" : "transparent",
-          backdropFilter: scrolled ? "blur(20px)" : "none",
-          borderBottom: scrolled ? "1px solid var(--border)" : "none",
-          transition: "height 0.4s, background 0.4s, border 0.4s",
-        }}
+        aria-label="Primary"
+        className="fixed inset-x-0 top-0 z-[60] mix-blend-difference"
+        animate={{ y: hidden && !open ? "-110%" : "0%" }}
+        transition={{ duration: 0.6, ease: EASE }}
       >
-        {/* Logo */}
-        <a
-          href="#hero"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1.4rem",
-            letterSpacing: "0.08em",
-            color: "var(--text)",
-            textDecoration: "none",
-          }}
-        >
-          {personal.name.split(" ")[0].toUpperCase()}
-          <span style={{ color: "var(--accent-y)" }}>.</span>
-        </a>
-
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {NAV.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="link-underline"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.65rem",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "var(--text-muted)",
-                textDecoration: "none",
-                paddingBottom: "2px",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-            >
-              {item.label}
+        <div className="wrap flex items-center justify-between py-5 text-[#eeece7]">
+          <a href="#top" className="display text-xl tracking-tight" aria-label="Back to top">
+            N<span className="serif">D</span>
+            <sup className="ml-0.5 text-[0.55em] font-mono">©26</sup>
+          </a>
+          <ul className="hidden items-center gap-8 md:flex">
+            {LINKS.map((l, i) => (
+              <li key={l.href}>
+                <a href={l.href} className="eyebrow link-u !text-[#eeece7]" data-cursor="hover">
+                  <span className="opacity-50">0{i + 1}</span> {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-center gap-5">
+            <a href={personal.resume} target="_blank" rel="noopener" className="eyebrow link-u hidden !text-[#eeece7] sm:inline" data-cursor="hover">
+              Résumé ↗
             </a>
-          ))}
-          <ThemeToggle />
+            <button
+              type="button"
+              className="eyebrow !text-[#eeece7] md:hidden"
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={() => setOpen((o) => !o)}
+            >
+              {open ? "Close" : "Menu"}
+            </button>
+          </div>
         </div>
-
-        {/* Mobile burger */}
-        <button
-          className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8"
-          onClick={() => setOpen(!open)}
-          aria-label="Menu"
-        >
-          <motion.span
-            animate={open ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-            className="block h-px"
-            style={{ background: "var(--text)", transformOrigin: "center" }}
-          />
-          <motion.span
-            animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-            className="block h-px"
-            style={{ background: "var(--text)" }}
-          />
-          <motion.span
-            animate={open ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-            className="block h-px"
-            style={{ background: "var(--text)", transformOrigin: "center" }}
-          />
-        </button>
       </motion.nav>
 
-      {/* Mobile menu overlay */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
-            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-40 flex flex-col justify-center px-10"
-            style={{ background: "var(--bg)" }}
+            id="mobile-menu"
+            className="fixed inset-0 z-[55] flex flex-col justify-end bg-[var(--bg)] p-[var(--gutter)] pb-12"
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.8, ease: EASE }}
           >
-            <div className="flex flex-col gap-8">
-              {NAV.map((item, i) => (
-                <motion.a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  initial={{ x: -40, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
-                    letterSpacing: "0.04em",
-                    color: "var(--text)",
-                    textDecoration: "none",
-                  }}
-                >
-                  {item.label}
-                </motion.a>
+            <ul className="flex flex-col gap-2">
+              {LINKS.map((l, i) => (
+                <li key={l.href} className="overflow-hidden">
+                  <motion.a
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className="display flex items-baseline gap-4 text-[13vw]"
+                    initial={{ y: "100%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 0.8, ease: EASE, delay: 0.2 + i * 0.06 }}
+                  >
+                    <span className="eyebrow">0{i + 1}</span>
+                    {l.label}
+                  </motion.a>
+                </li>
               ))}
-            </div>
-            <div className="mt-16">
-              <ThemeToggle />
+            </ul>
+            <div className="mt-10 flex gap-6 eyebrow">
+              <a href={personal.githubUrl} target="_blank" rel="noopener">GitHub</a>
+              <a href={personal.linkedinUrl} target="_blank" rel="noopener">LinkedIn</a>
+              <a href={personal.resume} target="_blank" rel="noopener">Résumé</a>
             </div>
           </motion.div>
         )}

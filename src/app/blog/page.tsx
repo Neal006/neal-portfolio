@@ -71,7 +71,7 @@ export default function BlogIndex() {
           maxWidth: "50ch",
         }}
       >
-        Deep-dives into AI architecture decisions, benchmark results, and engineering trade-offs from projects I've shipped.
+        Deep-dives into AI architecture decisions, benchmark results, and engineering trade-offs from projects I&apos;ve shipped.
       </p>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
