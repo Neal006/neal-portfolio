@@ -136,8 +136,8 @@ export default function About() {
                 is my favourite kind of thank-you.
               </p>
               <p>
-                Right now I&apos;m learning Rust, thinking way too much about how LLMs remember things, and helping run the ACM
-                student chapter at my university.
+                Right now I&apos;m learning Rust and thinking way too much about how LLMs remember things. I also just wrapped
+                up a year as chair of the ACM student chapter at my university, which was a lot of fun.
               </p>
             </Reveal>
 

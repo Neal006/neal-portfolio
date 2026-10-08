@@ -48,7 +48,7 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: EASE }}
       >
         <div className="wrap flex items-center justify-between py-5 text-[#eeece7]">
-          <a href="#top" className="display text-xl tracking-tight" aria-label="Back to top">
+          <a href="#top" className="display -my-3 py-3 text-xl tracking-tight" aria-label="Back to top">
             N<span className="serif">D</span>
             <sup className="ml-0.5 text-[0.55em] font-mono">©26</sup>
           </a>
@@ -67,7 +67,7 @@ export default function Navbar() {
             </a>
             <button
               type="button"
-              className="eyebrow !text-[#eeece7] md:hidden"
+              className="eyebrow -m-3 p-3 !text-[#eeece7] md:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
               onClick={() => setOpen((o) => !o)}

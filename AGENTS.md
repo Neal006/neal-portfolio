@@ -1,5 +1,5 @@
 # AGENTS.md — Project Memory (auto-maintained)
-Last updated: 2026-10-08 | Sessions logged: 2
+Last updated: 2026-10-08 | Sessions logged: 3
 
 ## Identity
 Neal Daftary's personal portfolio (neal-daftary.vercel.app) — recruiters/engineers read it; content comes from the resume PDF + live GitHub (Neal006).
@@ -12,7 +12,7 @@ Next.js 16 (App Router, Turbopack, React Compiler) · React 19 · TS · Tailwind
 
 ## Current State & Focus
 - v2 redesign shipped on branch `worktree-portfolio-v2` (Oct 2026): dark-only ember theme, WebGL hero, 6 numbered sections.
-- Works: build, 28 unit tests, 0px horizontal overflow at 390/1440, no console errors.
+- Works: build, 28 unit tests, 0px overflow + nothing past viewport at 320/360/390/430/768/1440 (touch QA), no console errors. Live in prod at neal-daftary.vercel.app (deployed from this branch; PR #1 not merged).
 - One pre-existing lint warning in src/app/api/chat/route.ts (unused errText). Blog pages still use old copy/styles via CSS vars.
 - Preloader is hidden pre-paint via html[data-intro-seen] (inline script in layout.tsx); Navbar renders outside <main> so the mobile menu can inert it.
 
@@ -44,6 +44,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - No em dashes in any copy, comments or prompts (user preference): use commas, colons, parentheses, ' | ' in titles, en dash only in date ranges.
 - Colors only via CSS vars; ember (#ff5b23) is the single accent. Dark-only (no next-themes).
 - New section = SectionHeader(index,label,title,accent) + `wrap` container + Reveal/MaskText.
+- ACM chair role is PAST (Sep 2025 – Oct 2026): never phrase it as current.
 - Responsive grids need explicit `grid-cols-1` base (implicit auto tracks overflowed on mobile).
 - Never render private-repo PR titles; keep personal phone out of client data.
 - No console.log; server logs only via console.error in lib/github/index.ts.
@@ -64,6 +65,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - 2026-10-08 — Generated project art (seeded SVG) instead of screenshots — consistent, zero assets.
 
 ## Changelog
+2026-10-08 | ACM tenure ended (Sep 2025 – Oct 2026) + mobile fixes | profile.ts leadership, About.tsx, chatPrompt.ts, Work award chip wrap, Contact email button sizing, Navbar 44px tap areas | past tense everywhere; chat prompt states period + completed
 2026-10-08 | Remove all em dashes; octopus avatar.jpg replaces avatar.png | 19 src files, About.tsx, profile.ts, public/images | avatar frame is aspect-square + object-cover
 2026-10-08 | About section, bento Work, hidden orgs, reactive 3D hero shader | About, Work, Hero, HeroCanvas, page.tsx, lib/github/config.ts; -Manifesto, -ProjectArt | shader normals via dFdx/dFdy + cursor-following light; pointer listeners on window, disabled for reduced motion
 2026-10-08 | Review fixes (a11y, hydration, ISR, chat input) | Navbar, Hero, HeroCanvas, Preloader, CountUp, lib/github/index.ts, lib/chatMessages.ts, api/chat | runtime GitHub failure rethrows to keep last good ISR page; chat roles whitelisted + capped

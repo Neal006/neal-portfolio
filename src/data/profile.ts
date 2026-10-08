@@ -160,9 +160,9 @@ export const achievements = [
 export const leadership = {
   role: "Student Chairperson",
   org: "Nirma University ACM Student Chapter",
-  period: "Sep 2025 – Present",
+  period: "Sep 2025 – Oct 2026",
   summary:
-    "Leading a 150+ member tech community; launched Prompt to Prototype, a one-day AI build challenge, and mentorship tracks.",
+    "Led a 150+ member tech community; launched Prompt to Prototype, a one-day AI build challenge, and mentorship tracks.",
 };
 
 export const skills: { group: string; items: string[] }[] = [

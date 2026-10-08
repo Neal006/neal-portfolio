@@ -63,7 +63,7 @@ function ProjectCard({ project: p, index, size }: { project: Project; index: num
       </div>
 
       <div className="relative mt-8 flex flex-col gap-3">
-        {p.award && <span className="chip w-fit !border-[var(--ember)] !text-[var(--ember)]">★ {p.award}</span>}
+        {p.award && <span className="chip w-fit max-w-full !whitespace-normal !leading-snug !border-[var(--ember)] !text-[var(--ember)]">★ {p.award}</span>}
         <h3 className={`font-medium leading-[0.95] tracking-[-0.045em] ${wide ? "text-[clamp(2.4rem,4.5vw,4rem)]" : "text-[clamp(2rem,3vw,2.75rem)]"}`}>
           {p.title}
         </h3>

@@ -54,12 +54,12 @@ export default function Contact({ syncedAt }: { syncedAt: string }) {
           <Reveal delay={0.1}>
             <MagneticButton
               onClick={copyEmail}
-              className="group flex items-center gap-4 rounded-full bg-[var(--text)] px-7 py-5 text-black transition-colors hover:bg-[var(--ember)]"
+              className="group flex max-w-full items-center gap-3 rounded-full bg-[var(--text)] px-5 py-4 text-black transition-colors hover:bg-[var(--ember)] sm:gap-4 sm:px-7 sm:py-5"
             >
-              <span className="text-lg font-medium tracking-[-0.02em] md:text-xl" aria-live="polite">
+              <span className="min-w-0 text-[0.9rem] font-medium [overflow-wrap:anywhere] tracking-[-0.02em] sm:text-lg md:text-xl" aria-live="polite">
                 {copied ? "Copied to clipboard ✓" : personal.email}
               </span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-[var(--text)]">↗</span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black text-[var(--text)] sm:h-9 sm:w-9">↗</span>
             </MagneticButton>
           </Reveal>
         </div>

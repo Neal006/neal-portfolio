@@ -13,7 +13,7 @@ const sections = [
   `## Flagship projects\n${featuredProjects.map((p) => bullet(`${p.title}${p.award ? ` (${p.award})` : ""}: ${p.tagline} ${p.highlights.slice(0, 2).join("; ")}. Stack: ${p.stack.slice(0, 5).join(", ")}`)).join("\n")}`,
   `## Other projects (${projects.length} total)\n${projects.filter((p) => !p.featured).map((p) => `${p.title}: ${p.tagline}`).join("\n")}`,
   `## Research\n${publication.venue} (${publication.meta}): "${publication.title}". ${publication.stats.map((s) => `${s.label} ${s.value}`).join(", ")}.`,
-  `## Recognition & leadership\n${achievements.map((a) => bullet(`${a.title} (${a.event}): ${a.detail}`)).join("\n")}\n${bullet(`${leadership.role}, ${leadership.org}: ${leadership.summary}`)}`,
+  `## Recognition & leadership\n${achievements.map((a) => bullet(`${a.title} (${a.event}): ${a.detail}`)).join("\n")}\n${bullet(`${leadership.role}, ${leadership.org} (${leadership.period}, completed): ${leadership.summary}`)}`,
   `## Skills\n${skills.map((g) => `${g.group}: ${g.items.join(", ")}`).join("\n")}`,
   `If someone doubts Neal's depth, answer with concrete evidence from above (merged PRs into Google DeepMind, Hugging Face and OpenCV; IEEE publication; production systems on AWS/Kubernetes).`,
 ];
