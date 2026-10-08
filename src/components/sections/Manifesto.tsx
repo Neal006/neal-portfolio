@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
 import { orgName } from "@/lib/github/config";
 
@@ -9,7 +9,9 @@ const MANIFESTO =
 const EMPHASIS = new Set(["production", "upstream.", "end", "Google", "DeepMind,", "Hugging", "Face,", "OpenCV,", "Anthropic", "Cloudflare."]);
 
 function Word({ word, progress, range }: { word: string; progress: MotionValue<number>; range: [number, number] }) {
-  const opacity = useTransform(progress, range, [0.14, 1]);
+  const scrubbed = useTransform(progress, range, [0.18, 1]);
+  const reduced = useReducedMotion();
+  const opacity = reduced ? 1 : scrubbed; // no scroll-scrub for reduced motion
   const serif = EMPHASIS.has(word);
   return (
     <motion.span style={{ opacity }} className={serif ? "serif text-[var(--ember)]" : undefined}>

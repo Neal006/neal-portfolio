@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";

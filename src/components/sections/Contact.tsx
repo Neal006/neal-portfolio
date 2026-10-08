@@ -81,10 +81,10 @@ export default function Contact({ syncedAt }: { syncedAt: string }) {
         </ul>
 
         <footer className="flex flex-col gap-3 border-t border-[var(--border)] py-8 eyebrow md:flex-row md:items-center md:justify-between">
-          <span>© {new Date().getFullYear()} {personal.name} — {personal.location}</span>
+          <span>© {new Date(syncedAt).getUTCFullYear()} {personal.name} — {personal.location}</span>
           <span>
             Designed & engineered by hand · GitHub data synced{" "}
-            {new Date(syncedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+            {new Date(syncedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
           </span>
           <a href="#top" className="link-u !text-[var(--text)]">Back to top ↑</a>
         </footer>

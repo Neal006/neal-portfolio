@@ -56,7 +56,8 @@ function Heatmap({ year }: { year: ContributionYear }) {
   const onHover = (e: MouseEvent<HTMLDivElement>, day: ContributionDay) => {
     const host = ref.current?.getBoundingClientRect();
     const cell = e.currentTarget.getBoundingClientRect();
-    if (host) setTip({ x: cell.left - host.left + cell.width / 2, y: cell.top - host.top, day });
+    const scrollX = ref.current?.scrollLeft ?? 0; // grid scrolls horizontally on small screens
+    if (host) setTip({ x: cell.left - host.left + scrollX + cell.width / 2, y: cell.top - host.top, day });
   };
 
   return (
@@ -150,12 +151,12 @@ export default function GithubActivity({ years, stats, languages, syncedAt, live
               </div>
               <div className="eyebrow mt-3">contributions in {year.year}</div>
             </div>
-            <div role="tablist" aria-label="Year" className="flex gap-2">
+            <div role="group" aria-label="Year" className="flex gap-2">
               {ordered.map((y) => (
                 <button
                   key={y.year}
-                  role="tab"
-                  aria-selected={y.year === year.year}
+                 
+                  aria-pressed={y.year === year.year}
                   onClick={() => setSelected(y.year)}
                   className={`chip !px-4 !py-2 transition-colors ${y.year === year.year ? "!border-[var(--ember)] !bg-[var(--ember)] !text-black" : "hover:!text-[var(--text)]"}`}
                 >
@@ -170,9 +171,9 @@ export default function GithubActivity({ years, stats, languages, syncedAt, live
           <div className="mt-6 flex flex-col gap-6 border-t border-[var(--border)] pt-6 md:flex-row md:items-center md:justify-between">
             <dl className="flex flex-wrap gap-x-8 gap-y-3">
               {breakdown.map((b) => (
-                <div key={b.label} className="flex items-baseline gap-2">
-                  <dd className="text-lg font-medium tabular-nums">{b.value}</dd>
+                <div key={b.label} className="flex flex-row-reverse items-baseline justify-end gap-2">
                   <dt className="eyebrow">{b.label}</dt>
+                  <dd className="text-lg font-medium tabular-nums">{b.value}</dd>
                 </div>
               ))}
             </dl>
@@ -240,7 +241,7 @@ export default function GithubActivity({ years, stats, languages, syncedAt, live
         </div>
 
         <p className="eyebrow mt-6 !text-[0.62rem] text-[var(--text-faint)]">
-          Synced {new Date(syncedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} ·{" "}
+          Synced {new Date(syncedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })} ·{" "}
           {live ? "live GitHub GraphQL" : "snapshot"} · private contributions are counted, never shown
         </p>
       </div>

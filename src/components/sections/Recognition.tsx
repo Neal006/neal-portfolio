@@ -1,4 +1,3 @@
-"use client";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { achievements, education, leadership, publication, skills } from "@/data/profile";
@@ -33,9 +32,9 @@ export default function Recognition() {
               </div>
               <dl className="grid grid-cols-3 gap-4 border-t border-black/20 pt-6">
                 {publication.stats.map((s) => (
-                  <div key={s.label}>
-                    <dd className="display text-[clamp(1.8rem,3.5vw,3rem)]">{s.value}</dd>
+                  <div key={s.label} className="flex flex-col-reverse">
                     <dt className="font-mono text-[0.65rem] uppercase tracking-[0.14em] opacity-70">{s.label}</dt>
+                    <dd className="display text-[clamp(1.8rem,3.5vw,3rem)]">{s.value}</dd>
                   </div>
                 ))}
               </dl>

@@ -59,14 +59,14 @@ export default function Preloader() {
         <motion.div
           key="preloader"
           aria-hidden
-          className="fixed inset-0 z-[9995] flex flex-col justify-between bg-[var(--bg)] p-[var(--gutter)]"
+          className="preloader fixed inset-0 z-[9995] flex flex-col justify-between bg-[var(--bg)] p-[var(--gutter)]"
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           initial={{ clipPath: "inset(0 0 0% 0)" }}
           transition={{ duration: 1, ease: EASE }}
         >
           <div className="flex justify-between eyebrow">
             <span>Neal Daftary</span>
-            <span>Portfolio — {new Date().getFullYear()}</span>
+            <span>Portfolio — v2</span>
           </div>
           <div className="flex items-end justify-between gap-6">
             <p className="serif text-[clamp(1.5rem,3vw,2.5rem)] text-[var(--text-muted)] max-w-md leading-tight">

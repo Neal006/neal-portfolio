@@ -81,8 +81,12 @@ body::after {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--ember); }
 
-/* Custom cursor hides the system one only once it has mounted */
+/* Returning visitors skip the intro (flag set by a pre-paint script in layout.tsx) */
+html[data-intro-seen] .preloader { display: none; }
+
+/* Custom cursor hides the system one only once it has mounted; text fields keep theirs */
 html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: none; }
+html.has-cursor input, html.has-cursor textarea { cursor: text; }
 
 :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; border-radius: 2px; }
 

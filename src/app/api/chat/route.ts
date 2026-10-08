@@ -1,6 +1,7 @@
 export const runtime = 'edge';
 
 import { SYSTEM_PROMPT } from "@/lib/chatPrompt";
+import { sanitizeMessages, type ChatMessage } from "@/lib/chatMessages";
 
 const STREAM_HEADERS = {
   "Content-Type": "text/plain; charset=utf-8",
@@ -10,13 +11,14 @@ const STREAM_HEADERS = {
 };
 
 export async function POST(req: Request) {
-  let messages = [];
+  let messages: ChatMessage[] = [];
   try {
-    const body = await req.json();
-    messages = body.messages || [];
-  } catch (e) {
+    const body = (await req.json()) as { messages?: unknown };
+    messages = sanitizeMessages(body?.messages);
+  } catch {
     return new Response("Invalid JSON body", { status: 400 });
   }
+  if (messages.length === 0) return new Response("No messages", { status: 400 });
 
   if (!process.env.OPENROUTER_API_KEY) {
     return new Response("API key not configured", { status: 503 });
@@ -81,7 +83,7 @@ export async function POST(req: Request) {
               const chunk = JSON.parse(payload);
               /* OpenRouter may return an error object inside a 200 SSE stream */
               if (chunk.error) {
-                if (!hasContent) controller.enqueue(encoder.encode("Sorry, I hit an error. Reach Neal at builtbyneal@gmail.com"));
+                if (!hasContent) controller.enqueue(encoder.encode("Sorry, I hit an error. Reach Neal at nealdaftary0405@gmail.com"));
                 controller.close();
                 return;
               }

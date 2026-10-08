@@ -49,7 +49,7 @@ void main(){
   o = vec4(col, 1.0);
 }`;
 
-const MAX_DPR = 1.5;
+const MAX_DPR = 1.25;
 const MOUSE_EASE = 0.06;
 const INTRO_MS = 2200;
 
@@ -103,6 +103,7 @@ export default function HeroCanvas() {
       gl.uniform2f(uRes, canvas.width, canvas.height);
       target.x = mouse.x = canvas.width * 0.72;
       target.y = mouse.y = canvas.height * 0.55;
+      if (reduced || !visible) frame(performance.now());
     };
     const onMove = (e: PointerEvent) => {
       const r = canvas.getBoundingClientRect();
@@ -131,19 +132,22 @@ export default function HeroCanvas() {
       if (visible) raf = requestAnimationFrame(frame);
     });
 
-    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
     io.observe(canvas);
-    window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onMove, { passive: true });
     raf = requestAnimationFrame(frame);
 
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
-      window.removeEventListener("resize", resize);
+      ro.disconnect();
       window.removeEventListener("pointermove", onMove);
       gl.deleteProgram(prog);
       gl.deleteBuffer(buf);
+      gl.deleteShader(vs);
+      gl.deleteShader(fs);
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, []);
 

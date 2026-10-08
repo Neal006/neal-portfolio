@@ -99,12 +99,12 @@ export default function ProjectIndex() {
           The full <span className="serif text-[var(--ember)]">index</span>
           <sup className="eyebrow ml-2 align-top">({projects.length})</sup>
         </h3>
-        <div role="tablist" aria-label="Filter projects" className="flex flex-wrap gap-2">
+        <div role="group" aria-label="Filter projects" className="flex flex-wrap gap-2">
           {(["All", ...projectCategories] as Filter[]).map((f) => (
             <button
               key={f}
-              role="tab"
-              aria-selected={filter === f}
+             
+              aria-pressed={filter === f}
               onClick={() => { setFilter(f); setOpenSlug(null); }}
               className={`chip transition-colors ${filter === f ? "!border-[var(--ember)] !bg-[var(--ember)] !text-black" : "hover:!text-[var(--text)]"}`}
             >

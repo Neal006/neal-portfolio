@@ -1,4 +1,3 @@
-"use client";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { experience, LOR_URL } from "@/data/profile";

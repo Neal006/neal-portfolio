@@ -94,7 +94,7 @@ export default function Chatbot() {
               m.id === botId
                 ? {
                     ...m,
-                    text: "Hmm, something went wrong. Reach Neal directly at builtbyneal@gmail.com 📧",
+                    text: "Hmm, something went wrong. Reach Neal directly at nealdaftary0405@gmail.com 📧",
                     streaming: false,
                   }
                 : m

@@ -42,12 +42,12 @@ export function MaskText({ text, className, delay = 0, stagger = 0.06 }: MaskTex
   return (
     <motion.span
       className={className}
-      aria-label={text}
       initial="hidden"
       whileInView="shown"
       viewport={VIEWPORT}
       transition={{ delayChildren: delay, staggerChildren: stagger }}
     >
+      <span className="sr-only">{text}</span>
       {words.map((w, i) => (
         <span key={`${w}-${i}`} aria-hidden className="inline-block overflow-hidden align-bottom pb-[0.2em] -mb-[0.2em]">
           <motion.span

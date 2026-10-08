@@ -147,9 +147,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       data-theme="dark"
+      suppressHydrationWarning /* data-intro-seen is set by the pre-paint script below */
       className={`${interTight.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
       <head>
+        {/* Pre-paint: hide the preloader for returning / reduced-motion visitors before first paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(sessionStorage.getItem('nd-intro-seen')==='1'||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.setAttribute('data-intro-seen','')}catch(e){}",
+          }}
+        />
+        <noscript>
+          <style>{".preloader{display:none!important}"}</style>
+        </noscript>
         <Script
           id="json-ld"
           type="application/ld+json"

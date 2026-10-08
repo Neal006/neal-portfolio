@@ -12,8 +12,9 @@ Next.js 16 (App Router, Turbopack, React Compiler) · React 19 · TS · Tailwind
 
 ## Current State & Focus
 - v2 redesign shipped on branch `worktree-portfolio-v2` (Oct 2026): dark-only ember theme, WebGL hero, 6 numbered sections.
-- Works: build, 23 unit tests, 0px horizontal overflow at 390/1440, no console errors.
-- Pre-existing lint warnings in src/app/api/chat/route.ts (unused vars). Blog pages still use old copy/styles via CSS vars.
+- Works: build, 28 unit tests, 0px horizontal overflow at 390/1440, no console errors.
+- One pre-existing lint warning in src/app/api/chat/route.ts (unused errText). Blog pages still use old copy/styles via CSS vars.
+- Preloader is hidden pre-paint via html[data-intro-seen] (inline script in layout.tsx); Navbar renders outside <main> so the mobile menu can inert it.
 
 ## Architecture
 page.tsx (server, ISR 6h) → getGithubData() → [live GraphQL if GITHUB_TOKEN | src/data/github-snapshot.json] → stats.ts derives streaks/OSS summary/languages → props to client sections.
@@ -62,6 +63,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - 2026-10-08 — Generated project art (seeded SVG) instead of screenshots — consistent, zero assets.
 
 ## Changelog
+2026-10-08 | Review fixes (a11y, hydration, ISR, chat input) | Navbar, Hero, HeroCanvas, Preloader, CountUp, lib/github/index.ts, lib/chatMessages.ts, api/chat | runtime GitHub failure rethrows to keep last good ISR page; chat roles whitelisted + capped
 2026-10-08 | Portfolio v2 rebuild from new resume + GitHub | src/**, scripts/sync-github.ts, next.config.ts | data layer tested; design system replaced
 
 ## Archived Summary

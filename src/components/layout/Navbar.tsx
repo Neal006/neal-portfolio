@@ -24,16 +24,25 @@ export default function Navbar() {
   });
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const main = document.querySelector("main");
+    document.body.style.overflow = "hidden";
+    main?.setAttribute("inert", "");
+    document.querySelector<HTMLAnchorElement>("#mobile-menu a")?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      main?.removeAttribute("inert");
+      window.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
   return (
     <>
       <motion.nav
         aria-label="Primary"
+        onFocusCapture={() => setHidden(false)}
         className="fixed inset-x-0 top-0 z-[60] mix-blend-difference"
         animate={{ y: hidden && !open ? "-110%" : "0%" }}
         transition={{ duration: 0.6, ease: EASE }}
@@ -73,6 +82,9 @@ export default function Navbar() {
         {open && (
           <motion.div
             id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             className="fixed inset-0 z-[55] flex flex-col justify-end bg-[var(--bg)] p-[var(--gutter)] pb-12"
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}

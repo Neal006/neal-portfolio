@@ -41,9 +41,11 @@ export default async function Page() {
     .map((o) => ({ owner: o.owner, avatar: o.avatar }));
 
   return (
-    <main>
+    <>
       <Preloader />
+      {/* Navbar sits outside <main> so the open mobile menu can mark <main> inert */}
       <Navbar />
+      <main>
       <Hero
         stats={{
           contributions: lifetime,
@@ -65,7 +67,8 @@ export default async function Page() {
       <Experience />
       <Recognition />
       <Contact syncedAt={gh.generatedAt} />
+      </main>
       <ChatbotLoader />
-    </main>
+    </>
   );
 }
