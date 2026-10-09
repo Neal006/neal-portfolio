@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Technical Writing — AI/ML Engineering Notes",
+  title: "Technical Writing | AI/ML Engineering Notes",
   description:
-    "Technical deep-dives by Neal Daftary — AI & ML Engineer at Nirma University. Covers LLM memory benchmarking, industrial Computer Vision, RAG architecture, and ISRO-funded research.",
+    "Technical deep-dives by Neal Daftary, AI & ML Engineer at Nirma University. Covers LLM memory benchmarking, industrial Computer Vision, RAG architecture, and ISRO-funded research.",
 };
 
 const POSTS = [
@@ -22,7 +22,7 @@ const POSTS = [
     date: "2026-03-10",
     tags: ["Computer Vision", "DINOv2", "OpenVINO", "Industrial AI"],
     excerpt:
-      "How we built a full-stack industrial defect detection platform using DINOv2, OpenVINO, and a FastAPI streaming pipeline — and secured 4th National Rank at the Mitsubishi Electric Cup.",
+      "How we built a full-stack industrial defect detection platform using DINOv2, OpenVINO, and a FastAPI streaming pipeline, and secured 4th National Rank at the Mitsubishi Electric Cup.",
   },
   {
     slug: "solv-ai-voice-complaint-management",
@@ -71,7 +71,7 @@ export default function BlogIndex() {
           maxWidth: "50ch",
         }}
       >
-        Deep-dives into AI architecture decisions, benchmark results, and engineering trade-offs from projects I've shipped.
+        Deep-dives into AI architecture decisions, benchmark results, and engineering trade-offs from projects I&apos;ve shipped.
       </p>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>

@@ -1,169 +1,68 @@
-"use client";
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { experience } from "@/data/portfolio";
+import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { experience, LOR_URL } from "@/data/profile";
 
 export default function Experience() {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-
   return (
-    <section
-      id="experience"
-      ref={ref}
-      style={{ background: "var(--bg)", paddingTop: "7rem", paddingBottom: "7rem", overflow: "hidden" }}
-    >
-      {/* ── Hidden SEO paragraph ── */}
-      <p className="sr-only">
-        Neal Daftary's professional experience: AI Intern at 8xSports (June–September 2025),
-        building a real-time visual search engine with YOLOv8, DINOv2, and FAISS achieving
-        645ms latency across 301 sports profiles — earned Letter of Recommendation. AI Software
-        Engineering Intern at MZHub Faithtech (October–December 2025), a spiritual technology
-        platform for religious institutions, improving web performance by 57% and SEO by 40%
-        on Azure. Undergraduate Student Researcher at Nirma University under ISRO funding
-        (January 2026–present), building Computer Vision pipelines on Chandrayaan-2 TMC-2 and
-        OHRC lunar imagery for automated crater detection, segmentation, and morphometric analysis.
-      </p>
+    <section id="experience" className="relative py-24 md:py-36">
+      <div className="wrap">
+        <SectionHeader
+          index="04"
+          label="Experience"
+          title="Where I've"
+          accent="worked."
+          aside="Three remote internships, one theme: own the thing end to end and leave it faster, safer and in production."
+        />
 
-      {/* Section header */}
-      <div
-        className="flex items-center justify-between px-6 md:px-10 mb-14"
-        style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.6rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-          }}
-        >
-          04 — Experience
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.6rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-          }}
-        >
-          {experience.length} Roles
-        </span>
-      </div>
-
-      <div className="px-6 md:px-10">
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(3rem, 8vw, 7rem)",
-            lineHeight: 0.9,
-            color: "var(--text)",
-            marginBottom: "4rem",
-          }}
-        >
-          EXP
-          <span style={{ WebkitTextStroke: "2px var(--text)", color: "transparent" }}>ERIENCE</span>
-        </motion.h2>
-
-        {/* Experience rows */}
-        <div>
-          {experience.map((exp, i) => (
-            <motion.article
-              key={exp.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="group"
-              itemScope
-              itemType="https://schema.org/WorkExperience"
-            >
-              <div
-                className="grid md:grid-cols-12 gap-6 py-8 md:py-10"
-                style={{
-                  borderBottom: "1px solid var(--border)",
-                  transition: "border-color 0.3s",
-                }}
-              >
-                {/* Left: Period + index */}
-                <div className="md:col-span-3 flex flex-col gap-2">
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.58rem",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    0{i + 1}
-                  </span>
-                  <time
-                    itemProp="startDate"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.1em",
-                      color: exp.accentColor,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {exp.period}
-                  </time>
+        <ol className="border-t border-[var(--border)]">
+          {experience.map((job, i) => (
+            <li key={job.company} className="group border-b border-[var(--border)]">
+              <Reveal delay={i * 0.05} className="grid grid-cols-1 gap-6 py-10 md:grid-cols-[12rem_1fr_1.25fr] md:gap-10 md:py-14">
+                <div className="flex flex-col gap-2">
+                  <span className="eyebrow !text-[var(--text)]">{job.period}</span>
+                  <span className="eyebrow">{job.location}</span>
+                  {job.current && (
+                    <span className="mt-1 inline-flex items-center gap-2 eyebrow !text-[#3ddc84]">
+                      <span className="pulse-dot" /> Now
+                    </span>
+                  )}
                 </div>
 
-                {/* Center: Company + Role */}
-                <div className="md:col-span-4 flex flex-col gap-2">
-                  <h3
-                    itemProp="hiringOrganization"
-                    style={{
-                      fontFamily: "var(--font-heading)",
-                      fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
-                      fontWeight: 700,
-                      color: "var(--text)",
-                      lineHeight: 1.1,
-                    }}
+                <div>
+                  <a
+                    href={job.url}
+                    target="_blank"
+                    rel="noopener"
+                    data-cursor-label="Visit"
+                    className="display inline-block text-[clamp(3rem,7vw,6.5rem)] transition-colors duration-500 group-hover:text-[var(--ember)]"
                   >
-                    {exp.company}
-                  </h3>
-                  <p
-                    itemProp="title"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      color: exp.accentColor,
-                    }}
-                  >
-                    {exp.role}
-                  </p>
+                    {job.company}
+                  </a>
+                  <p className="serif mt-3 text-2xl text-[var(--text-muted)]">{job.role}</p>
                 </div>
 
-                {/* Right: Description */}
-                <div className="md:col-span-5">
-                  <p
-                    itemProp="description"
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      fontSize: "0.875rem",
-                      lineHeight: 1.75,
-                      color: "var(--text-muted)",
-                    }}
-                  >
-                    {exp.description}
-                  </p>
+                <div className="flex flex-col gap-6">
+                  <ul className="space-y-3 text-[1.02rem] leading-relaxed text-[var(--text-muted)]">
+                    {job.points.map((pt) => (
+                      <li key={pt} className="flex gap-3">
+                        <span className="mt-[0.7em] h-px w-4 shrink-0 bg-[var(--ember)]" />
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex flex-wrap gap-2">
+                    {job.stack.map((s) => <span key={s} className="chip">{s}</span>)}
+                    {job.company === "8xSports" && (
+                      <a href={LOR_URL} target="_blank" rel="noopener" className="chip !border-[var(--ember)] !text-[var(--ember)]">
+                        Letter of Recommendation ↗
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.article>
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

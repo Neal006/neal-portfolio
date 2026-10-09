@@ -94,7 +94,7 @@ export default function Chatbot() {
               m.id === botId
                 ? {
                     ...m,
-                    text: "Hmm, something went wrong. Reach Neal directly at builtbyneal@gmail.com 📧",
+                    text: "Hmm, something went wrong. Reach Neal directly at nealdaftary0405@gmail.com 📧",
                     streaming: false,
                   }
                 : m
@@ -119,10 +119,10 @@ export default function Chatbot() {
           height: 56,
           background: open
             ? "var(--bg-elevated)"
-            : "linear-gradient(135deg, #E5001A 0%, #AA0015 100%)",
+            : "linear-gradient(135deg, #FF5B23 0%, #C63F17 100%)",
           color: open ? "var(--text)" : "#fff",
           border: "2px solid var(--accent-y)",
-          boxShadow: open ? "0 0 0 0 transparent" : "0 0 28px rgba(229,0,26,0.45)",
+          boxShadow: open ? "0 0 0 0 transparent" : "0 0 28px rgba(255,91,35,0.45)",
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -172,7 +172,7 @@ export default function Chatbot() {
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
               boxShadow:
-                "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(229,0,26,0.2)",
+                "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,91,35,0.2)",
             }}
           >
             {/* Header */}
@@ -190,7 +190,7 @@ export default function Chatbot() {
                 style={{
                   width: 36,
                   height: 36,
-                  background: "linear-gradient(135deg, #E5001A, #AA0015)",
+                  background: "linear-gradient(135deg, #FF5B23, #C63F17)",
                   color: "#fff",
                 }}
               >
@@ -254,7 +254,7 @@ export default function Chatbot() {
                       style={{
                         width: 22,
                         height: 22,
-                        background: "linear-gradient(135deg, #E5001A, #AA0015)",
+                        background: "linear-gradient(135deg, #FF5B23, #C63F17)",
                         color: "#fff",
                         fontWeight: 700,
                       }}

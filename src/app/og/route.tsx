@@ -6,7 +6,7 @@ export const runtime = "edge";
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const title    = searchParams.get("title")    ?? "Neal Daftary";
-  const subtitle = searchParams.get("subtitle") ?? "AI & ML Engineer · Computer Vision · LLM Systems";
+  const subtitle = searchParams.get("subtitle") ?? "Software & AI Engineer · Merged into Google DeepMind, Hugging Face, OpenCV";
 
   return new ImageResponse(
     (
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
       >
         {/* Top accent bar */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <div style={{ width: "40px", height: "3px", background: "#E5001A" }} />
+          <div style={{ width: "40px", height: "3px", background: "#FF5B23" }} />
           <span style={{ fontSize: "18px", color: "#8A8A8A", letterSpacing: "4px", textTransform: "uppercase" }}>
             nealdaftary.com
           </span>
@@ -64,12 +64,12 @@ export async function GET(req: NextRequest) {
               alignItems: "center",
               gap: "12px",
               fontSize: "18px",
-              color: "#E5001A",
+              color: "#FF5B23",
               letterSpacing: "3px",
               textTransform: "uppercase",
             }}
           >
-            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#E5001A" }} />
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#FF5B23" }} />
             AI · ML · Computer Vision
           </div>
           <div style={{ fontSize: "16px", color: "#222222" }}>Ahmedabad, India</div>

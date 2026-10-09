@@ -1,184 +1,93 @@
 "use client";
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import TextScramble from "@/components/animations/TextScramble";
-import { personal } from "@/data/portfolio";
+import { useState } from "react";
+import MagneticButton from "@/components/animations/MagneticButton";
+import { MaskText, Reveal } from "@/components/ui/Reveal";
+import { personal } from "@/data/profile";
 
-const LINKS = [
-  { label: "Email", value: personal.contact.email, href: `mailto:${personal.contact.email}` },
-  { label: "GitHub", value: `github.com/${personal.contact.github}`, href: `https://github.com/${personal.contact.github}` },
-  { label: "LinkedIn", value: `linkedin.com/in/${personal.contact.linkedin}`, href: `https://linkedin.com/in/${personal.contact.linkedin}` },
-  { label: "Resume", value: "Download PDF", href: "/proofs/Neal_Daftary_Resume.pdf" },
-];
+const COPIED_MS = 2000;
 
-export default function Contact() {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
-  const [hovered, setHovered] = useState<number | null>(null);
+export default function Contact({ syncedAt }: { syncedAt: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(personal.email);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), COPIED_MS);
+    } catch {
+      window.location.href = `mailto:${personal.email}`;
+    }
+  };
+
+  const links = [
+    { label: "GitHub", href: personal.githubUrl },
+    { label: "LinkedIn", href: personal.linkedinUrl },
+    { label: "Résumé", href: personal.resume },
+    { label: "Email", href: `mailto:${personal.email}` },
+  ];
 
   return (
-    <section
-      id="contact"
-      ref={ref}
-      style={{ background: "var(--bg-card)", paddingTop: "7rem", paddingBottom: "0", overflow: "hidden" }}
-    >
-      {/* Section header */}
+    <section id="contact" className="relative overflow-hidden pt-28 md:pt-40">
       <div
-        className="flex items-center justify-between px-6 md:px-10 mb-14"
-        style={{ borderBottom: "1px solid var(--border)", paddingBottom: "16px" }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.6rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "var(--text-muted)",
-          }}
-        >
-          06 — Contact
-        </span>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.6rem",
-            color: "var(--accent-y)",
-            letterSpacing: "0.15em",
-          }}
-        >
-          ● Open to Work
-        </span>
-      </div>
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[70%]"
+        style={{ background: "radial-gradient(60% 70% at 50% 100%, rgba(255,91,35,0.22), transparent 70%)" }}
+      />
+      <div className="wrap">
+        <Reveal className="mb-10 flex items-center gap-4">
+          <span className="eyebrow" style={{ color: "var(--ember)" }}>(06)</span>
+          <span className="eyebrow">Contact</span>
+          <span className="hairline flex-1" />
+        </Reveal>
 
-      <div className="px-6 md:px-10">
-        {/* Giant CTA headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-16"
-        >
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(4rem, 13vw, 12rem)",
-              lineHeight: 0.88,
-              letterSpacing: "0.01em",
-              color: "var(--text)",
-            }}
-          >
-            LET&apos;S
-            <br />
-            <span style={{ WebkitTextStroke: "2px var(--text)", color: "transparent" }}>
-              BUILD
-            </span>
-            <span style={{ color: "var(--accent-y)" }}>.</span>
-          </h2>
-        </motion.div>
+        <h2 className="display text-[clamp(3.5rem,13vw,13rem)]">
+          <MaskText text="Let's build" />
+          <br />
+          <MaskText text="something" delay={0.1} />{" "}
+          <MaskText text="real." className="serif text-[var(--ember)]" delay={0.2} />
+        </h2>
 
-        {/* Description + links grid */}
-        <div className="grid md:grid-cols-2 gap-12 pb-16" style={{ borderBottom: "1px solid var(--border)" }}>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "1.05rem",
-              lineHeight: 1.75,
-              color: "var(--text-muted)",
-              maxWidth: "40ch",
-            }}
-          >
-            Got a challenging AI problem, a product to ship, or research to collaborate on? I&apos;m always down to build something exceptional.
-          </motion.p>
-
-          <div className="space-y-0">
-            {LINKS.map((link, i) => (
-              <motion.a
-                key={i}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                download={link.label === "Resume"}
-                className="flex items-center justify-between py-4 md:py-5 group"
-                style={{
-                  borderBottom: "1px solid var(--border)",
-                  textDecoration: "none",
-                  borderColor: hovered === i ? "var(--accent-y)" : "var(--border)",
-                  transition: "border-color 0.2s",
-                }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.3 + i * 0.08 }}
-                onMouseEnter={() => setHovered(i)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                <div className="flex items-center gap-4">
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.55rem",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: hovered === i ? "var(--accent-y)" : "var(--text-muted)",
-                      transition: "color 0.2s",
-                      width: "4rem",
-                    }}
-                  >
-                    {link.label}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "0.75rem",
-                      color: hovered === i ? "var(--text)" : "var(--text-muted)",
-                      transition: "color 0.2s",
-                    }}
-                  >
-                    <TextScramble text={link.value} trigger={hovered === i} speed={5} />
-                  </span>
-                </div>
-                <motion.span
-                  animate={{ rotate: hovered === i ? 45 : 0, color: hovered === i ? "var(--accent-y)" : "var(--text-muted)" }}
-                  style={{ fontSize: "1rem", display: "block" }}
-                  transition={{ duration: 0.2 }}
-                >
-                  →
-                </motion.span>
-              </motion.a>
-            ))}
-          </div>
+        <div className="mt-14 flex flex-col gap-10 md:mt-20 md:flex-row md:items-end md:justify-between">
+          <Reveal className="max-w-md text-lg leading-relaxed text-[var(--text-muted)]">
+            Internships, open-source collabs, or a hard problem you want shipped? My inbox is open and I reply fast.
+          </Reveal>
+          <Reveal delay={0.1}>
+            <MagneticButton
+              onClick={copyEmail}
+              className="group flex max-w-full items-center gap-3 rounded-full bg-[var(--text)] px-5 py-4 text-black transition-colors hover:bg-[var(--ember)] sm:gap-4 sm:px-7 sm:py-5"
+            >
+              <span className="min-w-0 text-[0.9rem] font-medium [overflow-wrap:anywhere] tracking-[-0.02em] sm:text-lg md:text-xl" aria-live="polite">
+                {copied ? "Copied to clipboard ✓" : personal.email}
+              </span>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black text-[var(--text)] sm:h-9 sm:w-9">↗</span>
+            </MagneticButton>
+          </Reveal>
         </div>
 
-        {/* Badge row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6 }}
-          className="flex flex-wrap gap-3 py-10"
-        >
-          {["Open to Work", "AI/ML", "Computer Vision", "Full Stack AI", "Research", "India"].map(
-            (badge, i) => (
-              <span
-                key={badge}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.6rem",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: i === 0 ? "#fff" : "var(--text-muted)",
-                  background: i === 0 ? "var(--accent-y)" : "transparent",
-                  border: `1px solid ${i === 0 ? "var(--accent-y)" : "var(--border)"}`,
-                  borderRadius: "999px",
-                  padding: "7px 16px",
-                }}
+        <ul className="mt-20 grid grid-cols-2 border-t border-[var(--border)] md:grid-cols-4">
+          {links.map((l) => (
+            <li key={l.label} className="border-b border-[var(--border)] md:border-b-0 md:border-r md:last:border-r-0">
+              <a
+                href={l.href}
+                target={l.href.startsWith("mailto") ? undefined : "_blank"}
+                rel="noopener"
+                className="group flex items-center justify-between px-1 py-6 text-xl transition-colors hover:text-[var(--ember)] md:px-6"
               >
-                {badge}
-              </span>
-            )
-          )}
-        </motion.div>
+                {l.label}
+                <span className="transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <footer className="flex flex-col gap-3 border-t border-[var(--border)] py-8 eyebrow md:flex-row md:items-center md:justify-between">
+          <span>© {new Date(syncedAt).getUTCFullYear()} {personal.name} · {personal.location}</span>
+          <span>
+            Designed & engineered by hand · GitHub data synced{" "}
+            {new Date(syncedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}
+          </span>
+          <a href="#top" className="link-u !text-[var(--text)]">Back to top ↑</a>
+        </footer>
       </div>
     </section>
   );

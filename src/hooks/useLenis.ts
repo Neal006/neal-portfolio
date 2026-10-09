@@ -6,7 +6,7 @@ let lenisInstance: Lenis | null = null;
 
 export function useLenis() {
   useEffect(() => {
-    /* Honour prefers-reduced-motion — skip smooth scroll entirely */
+    /* Honour prefers-reduced-motion, skip smooth scroll entirely */
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     lenisInstance = new Lenis({
@@ -14,6 +14,7 @@ export function useLenis() {
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       smoothWheel: true,
+      anchors: { offset: -16 }, // smooth-scroll in-page nav links
     });
 
     function raf(time: number) {

@@ -1,143 +1,166 @@
 "use client";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ThemeToggle from "./ThemeToggle";
-import { personal } from "@/data/portfolio";
+import { personal } from "@/data/profile";
 
-const NAV = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Works", href: "#works" },
-  { label: "Blog", href: "/blog" },
-  { label: "Resume", href: "/proofs/Neal_Daftary_Resume.pdf", external: true },
+const LINKS = [
+  { href: "#work", label: "Work" },
+  { href: "#upstream", label: "Open Source" },
+  { href: "#activity", label: "Activity" },
+  { href: "#experience", label: "Experience" },
+  { href: "#contact", label: "Contact" },
 ];
+const EASE = [0.76, 0, 0.24, 1] as const;
+const SOLID_AFTER_PX = 24;
+/* Height of the bar: the hero counts as "left" once its bottom edge slides under it. */
+const NAV_OFFSET_PX = 64;
+
+function Hamburger({ open }: { open: boolean }) {
+  const line = "absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]";
+  return (
+    <span aria-hidden className="relative block h-3 w-7">
+      <span className={`${line} top-0 ${open ? "translate-y-[5.25px] rotate-45" : ""}`} />
+      <span className={`${line} bottom-0 ${open ? "-translate-y-[5.25px] -rotate-45" : ""}`} />
+    </span>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const [open, setOpen] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > SOLID_AFTER_PX));
+
+  // Hamburger as soon as the hero leaves; normal links again the moment any of it is back on screen.
+  useEffect(() => {
+    const hero = document.getElementById("top");
+    if (!hero) return;
+    const io = new IntersectionObserver(([entry]) => setPastHero(!entry.isIntersecting), {
+      rootMargin: `-${NAV_OFFSET_PX}px 0px 0px 0px`,
+    });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!open) return;
+    const main = document.querySelector("main");
+    document.body.style.overflow = "hidden";
+    main?.setAttribute("inert", "");
+    document.querySelector<HTMLAnchorElement>("#mobile-menu a")?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      main?.removeAttribute("inert");
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const collapsed = pastHero || open;
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10"
-        style={{
-          height: scrolled ? 52 : 68,
-          background: scrolled ? "rgba(10,10,10,0.94)" : "transparent",
-          backdropFilter: scrolled ? "blur(20px)" : "none",
-          borderBottom: scrolled ? "1px solid var(--border)" : "none",
-          transition: "height 0.4s, background 0.4s, border 0.4s",
-        }}
+      <nav
+        aria-label="Primary"
+        className={`fixed inset-x-0 top-0 z-[60] border-b transition-[background-color,border-color,backdrop-filter] duration-500 ${
+          scrolled && !open
+            ? "border-[var(--border)] bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-xl"
+            : "border-transparent bg-transparent"
+        }`}
       >
-        {/* Logo */}
-        <a
-          href="#hero"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "1.4rem",
-            letterSpacing: "0.08em",
-            color: "var(--text)",
-            textDecoration: "none",
-          }}
-        >
-          {personal.name.split(" ")[0].toUpperCase()}
-          <span style={{ color: "var(--accent-y)" }}>.</span>
-        </a>
+        <div className={`wrap relative flex items-center justify-between text-[#eeece7] transition-[padding] duration-500 ${scrolled ? "py-3.5" : "py-5"}`}>
+          <a href="#top" className="display -my-3 py-3 text-xl tracking-tight" aria-label="Back to top">
+            N<span className="serif text-[var(--ember)]">D</span>
+          </a>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {NAV.map((item) => (
+          {/* Desktop (lg+) links live only inside the hero; afterwards, and on smaller screens, the hamburger takes over. */}
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.ul
+                key="links"
+                className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4, ease: EASE }}
+              >
+                {LINKS.map((l, i) => (
+                  <li key={l.href}>
+                    <a href={l.href} className="eyebrow link-u !text-[#eeece7]" data-cursor="hover">
+                      <span className="opacity-50">0{i + 1}</span> {l.label}
+                    </a>
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+
+          {/* On lg+ Résumé and the hamburger share one grid cell and cross-fade in place. */}
+          <div className="flex items-center gap-6 lg:grid lg:justify-items-end lg:gap-0 lg:[grid-template-areas:'slot']">
             <a
-              key={item.label}
-              href={item.href}
-              {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="link-underline"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.65rem",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "var(--text-muted)",
-                textDecoration: "none",
-                paddingBottom: "2px",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+              href={personal.resume}
+              target="_blank"
+              rel="noopener"
+              className={`eyebrow link-u hidden !text-[#eeece7] transition-[opacity,visibility] duration-300 sm:inline lg:[grid-area:slot] ${collapsed ? "lg:invisible lg:opacity-0" : ""}`}
+              data-cursor="hover"
             >
-              {item.label}
+              Résumé ↗
             </a>
-          ))}
-          <ThemeToggle />
+            <button
+              type="button"
+              className={`-m-3 flex items-center gap-3 p-3 text-[#eeece7] transition-[opacity,visibility] duration-300 lg:[grid-area:slot] ${
+                collapsed ? "" : "lg:invisible lg:opacity-0"
+              }`}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              data-cursor="hover"
+              onClick={() => setOpen((o) => !o)}
+            >
+              <span className="eyebrow hidden !text-[#eeece7] md:inline">{open ? "Close" : "Menu"}</span>
+              <Hamburger open={open} />
+            </button>
+          </div>
         </div>
+      </nav>
 
-        {/* Mobile burger */}
-        <button
-          className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8"
-          onClick={() => setOpen(!open)}
-          aria-label="Menu"
-        >
-          <motion.span
-            animate={open ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-            className="block h-px"
-            style={{ background: "var(--text)", transformOrigin: "center" }}
-          />
-          <motion.span
-            animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-            className="block h-px"
-            style={{ background: "var(--text)" }}
-          />
-          <motion.span
-            animate={open ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-            className="block h-px"
-            style={{ background: "var(--text)", transformOrigin: "center" }}
-          />
-        </button>
-      </motion.nav>
-
-      {/* Mobile menu overlay */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
-            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-40 flex flex-col justify-center px-10"
-            style={{ background: "var(--bg)" }}
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            className="fixed inset-0 z-[55] flex flex-col justify-end bg-[var(--bg)] p-[var(--gutter)] pb-12"
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.8, ease: EASE }}
           >
-            <div className="flex flex-col gap-8">
-              {NAV.map((item, i) => (
-                <motion.a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  initial={{ x: -40, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
-                    letterSpacing: "0.04em",
-                    color: "var(--text)",
-                    textDecoration: "none",
-                  }}
-                >
-                  {item.label}
-                </motion.a>
+            <ul className="wrap flex w-full flex-col gap-2 !px-0">
+              {LINKS.map((l, i) => (
+                <li key={l.href} className="overflow-hidden">
+                  <motion.a
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className="display flex items-baseline gap-4 text-[clamp(2.75rem,13vw,7.5rem)] transition-colors hover:text-[var(--ember)]"
+                    initial={{ y: "100%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 0.8, ease: EASE, delay: 0.2 + i * 0.06 }}
+                  >
+                    <span className="eyebrow">0{i + 1}</span>
+                    {l.label}
+                  </motion.a>
+                </li>
               ))}
-            </div>
-            <div className="mt-16">
-              <ThemeToggle />
+            </ul>
+            <div className="wrap mt-10 flex w-full gap-6 !px-0 eyebrow">
+              <a href={personal.githubUrl} target="_blank" rel="noopener">GitHub</a>
+              <a href={personal.linkedinUrl} target="_blank" rel="noopener">LinkedIn</a>
+              <a href={personal.resume} target="_blank" rel="noopener">Résumé</a>
             </div>
           </motion.div>
         )}

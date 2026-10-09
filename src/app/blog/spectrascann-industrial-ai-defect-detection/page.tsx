@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "SpectraScan: Building a Real-Time Industrial AI Paint Defect Detection System",
   description:
-    "Neal Daftary built SpectraScan (CON-SOL-E Vision Pro) — an industrial Computer Vision platform for automotive paint defect detection using DINOv2, OpenVINO, FastAPI, and a PLC-driven gantry. 4th National Rank at Mitsubishi Electric Cup 2026.",
+    "Neal Daftary built SpectraScan (CON-SOL-E Vision Pro), an industrial Computer Vision platform for automotive paint defect detection using DINOv2, OpenVINO, FastAPI, and a PLC-driven gantry. 4th National Rank at Mitsubishi Electric Cup 2026.",
   keywords: [
     "SpectraScan industrial AI",
     "paint defect detection AI",
@@ -70,8 +70,8 @@ export default function SpectraScanPost() {
 
       <h2 style={h2Style}>THE PROBLEM: PAINT DEFECTS IN AUTOMOTIVE MANUFACTURING</h2>
       <p style={prose}>
-        Automotive door panels reject rates from paint defects — dust inclusions, scratches, and
-        rundown (drips) — cost manufacturers millions annually. Manual visual inspection is
+        Automotive door panels reject rates from paint defects (dust inclusions, scratches, and
+        rundown/drips) cost manufacturers millions annually. Manual visual inspection is
         inconsistent, subjective, and slow. The brief: build a system that detects all three defect
         classes in real-time and triggers a PLC-controlled CNC gantry for automated remediation.
       </p>
@@ -94,7 +94,7 @@ PDF inspection report (defect coordinates, severity)`}
       <h2 style={h2Style}>WHY DINOV2 + OPENVINO?</h2>
       <p style={prose}>
         DINOv2&apos;s self-supervised ViT features generalise remarkably well to industrial textures
-        without domain-specific pretraining — critical when you have limited labelled defect data.
+        without domain-specific pretraining, which is critical when you have limited labelled defect data.
         OpenVINO INT8 quantisation on an Intel iGPU brought inference from 850ms to sub-500ms
         without meaningful accuracy degradation, enabling real-time feedback on the production line.
       </p>
@@ -108,7 +108,7 @@ PDF inspection report (defect coordinates, severity)`}
       <p style={prose}>
         SpectraScan ships an embedded local RAG chatbot (Phi-3-mini + ChromaDB) that allows factory
         operators to query inspection history, defect statistics, and maintenance logs in natural
-        language — no cloud dependency, all inference runs on-device. This was built using LangChain
+        language with no cloud dependency, all inference runs on-device. This was built using LangChain
         with a custom chunking strategy optimised for structured PDF inspection report text.
       </p>
 
@@ -131,7 +131,7 @@ Accuracy:    92.35% mIoU on test split`}
 
       <div style={{ marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid var(--border)" }} itemProp="author" itemScope itemType="https://schema.org/Person">
         <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--text-muted)" }}>
-          Written by <span itemProp="name">Neal Daftary</span> — <span itemProp="jobTitle">AI & ML Engineer</span>, <span itemProp="affiliation">Nirma University, Ahmedabad</span>
+          Written by <span itemProp="name">Neal Daftary</span>, <span itemProp="jobTitle">AI & ML Engineer</span>, <span itemProp="affiliation">Nirma University, Ahmedabad</span>
         </p>
       </div>
     </article>
