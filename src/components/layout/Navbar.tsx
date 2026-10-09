@@ -11,10 +11,9 @@ const LINKS = [
   { href: "#contact", label: "Contact" },
 ];
 const EASE = [0.76, 0, 0.24, 1] as const;
-const HIDE_AFTER_PX = 160;
 const SOLID_AFTER_PX = 24;
-/* Collapse the desktop links into the hamburger once the hero has (almost) scrolled away. */
-const PAST_HERO_RATIO = 0.85;
+/* Height of the bar: the hero counts as "left" once its bottom edge slides under it. */
+const NAV_OFFSET_PX = 64;
 
 function Hamburger({ open }: { open: boolean }) {
   const line = "absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]";
@@ -27,18 +26,23 @@ function Hamburger({ open }: { open: boolean }) {
 }
 
 export default function Navbar() {
-  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setHidden(y > HIDE_AFTER_PX && y > prev);
-    setScrolled(y > SOLID_AFTER_PX);
-    setPastHero(y > window.innerHeight * PAST_HERO_RATIO);
-  });
+  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > SOLID_AFTER_PX));
+
+  // Hamburger as soon as the hero leaves; normal links again the moment any of it is back on screen.
+  useEffect(() => {
+    const hero = document.getElementById("top");
+    if (!hero) return;
+    const io = new IntersectionObserver(([entry]) => setPastHero(!entry.isIntersecting), {
+      rootMargin: `-${NAV_OFFSET_PX}px 0px 0px 0px`,
+    });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -59,16 +63,13 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav
+      <nav
         aria-label="Primary"
-        onFocusCapture={() => setHidden(false)}
         className={`fixed inset-x-0 top-0 z-[60] border-b transition-[background-color,border-color,backdrop-filter] duration-500 ${
           scrolled && !open
             ? "border-[var(--border)] bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-xl"
             : "border-transparent bg-transparent"
         }`}
-        animate={{ y: hidden && !open ? "-110%" : "0%" }}
-        transition={{ duration: 0.6, ease: EASE }}
       >
         <div className={`wrap relative flex items-center justify-between text-[#eeece7] transition-[padding] duration-500 ${scrolled ? "py-3.5" : "py-5"}`}>
           <a href="#top" className="display -my-3 py-3 text-xl tracking-tight" aria-label="Back to top">
@@ -124,7 +125,7 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
       <AnimatePresence>
         {open && (

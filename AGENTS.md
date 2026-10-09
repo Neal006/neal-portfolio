@@ -56,6 +56,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - eslint react-hooks/set-state-in-effect: read matchMedia/sessionStorage via useSyncExternalStore, not setState in effects.
 - next/font fetches Google Fonts at build; transient "Error while requesting resource" → just rerun build.
 - `gh` search for PRs with a personal token includes private org repos — normalize.ts filters isPrivate.
+- Lenis smooth scroll ignores window.scrollTo in Playwright; QA must scroll with page.mouse.wheel.
 - Remote avatars need images.remotePatterns (avatars.githubusercontent.com) in next.config.ts.
 - GITHUB_TOKEN is set in Vercel (Production + Preview, Sensitive: value not readable back). Locally sync:github falls back to `gh auth token` (Neal006). Set GITHUB_TOKEN (read-only, public scope) in Vercel for live heatmap; otherwise snapshot is served.
 
@@ -66,6 +67,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - 2026-10-08 — Generated project art (seeded SVG) instead of screenshots — consistent, zero assets.
 
 ## Changelog
+2026-10-09 | Navbar: no hide-on-scroll; hamburger tied to hero visibility | Navbar.tsx | IntersectionObserver on #top (rootMargin -64px) drives pastHero; bar always visible
 2026-10-09 | Hamburger nav after hero | Navbar.tsx | lg+ shows inline links only inside hero (scrollY < 0.85*vh); after that and below lg a hamburger opens the fullscreen menu; Résumé/hamburger share a grid cell and cross-fade; hidden controls use visibility so they leave tab order
 2026-10-09 | Journey merged-only; solid navbar on scroll; logo 'ND' | OpenSource.tsx, Navbar.tsx, page.tsx | journey/org list/stats/hero org count use merged PRs only; navbar dropped mix-blend-difference for blurred bg after 24px
 2026-10-08 | ACM tenure ended (Sep 2025 – Oct 2026) + mobile fixes | profile.ts leadership, About.tsx, chatPrompt.ts, Work award chip wrap, Contact email button sizing, Navbar 44px tap areas | past tense everywhere; chat prompt states period + completed
