@@ -5,13 +5,14 @@ import CountUp from "@/components/animations/CountUp";
 import { ossHighlights } from "@/data/profile";
 import { orgName } from "@/lib/github/config";
 import type { OpenSourceSummary } from "@/lib/github/stats";
-import type { PrState, PullRequest } from "@/lib/github/types";
+import type { PullRequest } from "@/lib/github/types";
 
-const STATE_STYLE: Record<PrState, { label: string; className: string }> = {
-  MERGED: { label: "Merged", className: "bg-[var(--ember)] text-black" },
-  OPEN: { label: "Open", className: "border border-[var(--border-strong)] text-[var(--text)]" },
-  CLOSED: { label: "Closed", className: "border border-[var(--border)] text-[var(--text-faint)]" },
-};
+/* The journey only showcases work that landed upstream. */
+type MergedPr = PullRequest & { mergedAt: string };
+
+function isMerged(p: PullRequest): p is MergedPr {
+  return p.state === "MERGED" && p.mergedAt !== null;
+}
 
 function formatStars(n: number): string {
   return n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n);
@@ -21,9 +22,10 @@ function monthKey(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 }
 
-function groupByMonth(prs: readonly PullRequest[]): [string, PullRequest[]][] {
-  const groups = new Map<string, PullRequest[]>();
-  for (const p of prs) groups.set(monthKey(p.createdAt), [...(groups.get(monthKey(p.createdAt)) ?? []), p]);
+function groupByMonth(prs: readonly MergedPr[]): [string, MergedPr[]][] {
+  const sorted = [...prs].sort((a, b) => b.mergedAt.localeCompare(a.mergedAt));
+  const groups = new Map<string, MergedPr[]>();
+  for (const p of sorted) groups.set(monthKey(p.mergedAt), [...(groups.get(monthKey(p.mergedAt)) ?? []), p]);
   return [...groups.entries()];
 }
 
@@ -33,11 +35,13 @@ interface OpenSourceProps {
 }
 
 export default function OpenSource({ summary, prs }: OpenSourceProps) {
-  const months = groupByMonth(prs);
+  const merged = prs.filter(isMerged);
+  const months = groupByMonth(merged);
+  const orgs = summary.orgs.filter((o) => o.merged > 0).sort((a, b) => b.merged - a.merged || b.stars - a.stars);
   const stats = [
-    { value: summary.merged, label: "PRs merged" },
-    { value: summary.total, label: "PRs opened" },
-    { value: summary.orgs.length, label: "Organisations" },
+    { value: merged.length, label: "PRs merged" },
+    { value: new Set(merged.map((p) => p.repo)).size, label: "Repos merged into" },
+    { value: orgs.length, label: "Organisations" },
   ];
 
   return (
@@ -100,10 +104,10 @@ export default function OpenSource({ summary, prs }: OpenSourceProps) {
               <h3 className="mb-2 text-[clamp(2rem,4vw,3.25rem)] font-medium leading-none tracking-[-0.045em]">
                 The <span className="serif text-[var(--ember)]">journey</span>
               </h3>
-              <p className="mb-8 text-[var(--text-muted)]">Every public pull request, live from GitHub.</p>
+              <p className="mb-8 text-[var(--text-muted)]">Every merged pull request, live from GitHub.</p>
             </Reveal>
             <ol className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
-              {summary.orgs.map((o, i) => (
+              {orgs.map((o, i) => (
                 <li key={o.owner}>
                   <Reveal delay={i * 0.03} y={12} className="flex items-center gap-4 py-3">
                     {o.avatar ? (
@@ -113,14 +117,12 @@ export default function OpenSource({ summary, prs }: OpenSourceProps) {
                     )}
                     <span className="flex-1 truncate font-medium">{orgName(o.owner)}</span>
                     <span className="eyebrow tabular-nums">{formatStars(o.stars)}★</span>
-                    <span className="eyebrow w-16 text-right tabular-nums text-[var(--text)]">
-                      {o.merged}/{o.total}
-                    </span>
+                    <span className="eyebrow w-12 text-right tabular-nums text-[var(--text)]">{o.merged}</span>
                   </Reveal>
                 </li>
               ))}
             </ol>
-            <p className="eyebrow mt-3 text-right">merged / opened</p>
+            <p className="eyebrow mt-3 text-right">PRs merged</p>
           </div>
 
           <ol className="relative border-l border-[var(--border)] pl-6 md:pl-10">
@@ -129,7 +131,7 @@ export default function OpenSource({ summary, prs }: OpenSourceProps) {
                 <Reveal y={16} className="relative mb-5">
                   <span className="absolute -left-[1.85rem] top-1.5 h-3 w-3 rounded-full border-2 border-[var(--bg)] bg-[var(--ember)] md:-left-[2.85rem]" />
                   <span className="eyebrow !text-[var(--text)]">{month}</span>
-                  <span className="eyebrow ml-3">{list.length} PR{list.length > 1 ? "s" : ""}</span>
+                  <span className="eyebrow ml-3">{list.length} merged</span>
                 </Reveal>
                 <ul className="space-y-1">
                   {list.map((p) => (
@@ -143,8 +145,8 @@ export default function OpenSource({ summary, prs }: OpenSourceProps) {
                         <span className="text-[0.95rem] leading-snug text-[var(--text-muted)] transition-colors group-hover:text-[var(--text)]">
                           {p.title}
                         </span>
-                        <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${STATE_STYLE[p.state].className}`}>
-                          {STATE_STYLE[p.state].label}
+                        <span className="rounded-full bg-[var(--ember)] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-black">
+                          Merged
                         </span>
                         <span className="eyebrow col-span-2 !text-[0.62rem]">
                           {p.repo} #{p.number}

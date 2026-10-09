@@ -45,7 +45,7 @@ export default async function Page() {
         stats={{
           contributions: lifetime,
           mergedPrs: oss.merged,
-          orgs: oss.orgs.length,
+          orgs: oss.orgs.filter((o) => o.merged > 0).length,
           repos: gh.profile.publicRepos,
         }}
       />

@@ -1,5 +1,5 @@
 # AGENTS.md — Project Memory (auto-maintained)
-Last updated: 2026-10-08 | Sessions logged: 3
+Last updated: 2026-10-08 | Sessions logged: 4
 
 ## Identity
 Neal Daftary's personal portfolio (neal-daftary.vercel.app) — recruiters/engineers read it; content comes from the resume PDF + live GitHub (Neal006).
@@ -44,6 +44,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - No em dashes in any copy, comments or prompts (user preference): use commas, colons, parentheses, ' | ' in titles, en dash only in date ranges.
 - Colors only via CSS vars; ember (#ff5b23) is the single accent. Dark-only (no next-themes).
 - New section = SectionHeader(index,label,title,accent) + `wrap` container + Reveal/MaskText.
+- Open-source journey shows MERGED PRs only (both org list and timeline); logo is plain 'ND', never add a year/number.
 - ACM chair role is PAST (Sep 2025 – Oct 2026): never phrase it as current.
 - Responsive grids need explicit `grid-cols-1` base (implicit auto tracks overflowed on mobile).
 - Never render private-repo PR titles; keep personal phone out of client data.
@@ -65,6 +66,7 @@ Chatbot (/api/chat, edge, OpenRouter) prompt = src/lib/chatPrompt.ts built from 
 - 2026-10-08 — Generated project art (seeded SVG) instead of screenshots — consistent, zero assets.
 
 ## Changelog
+2026-10-09 | Journey merged-only; solid navbar on scroll; logo 'ND' | OpenSource.tsx, Navbar.tsx, page.tsx | journey/org list/stats/hero org count use merged PRs only; navbar dropped mix-blend-difference for blurred bg after 24px
 2026-10-08 | ACM tenure ended (Sep 2025 – Oct 2026) + mobile fixes | profile.ts leadership, About.tsx, chatPrompt.ts, Work award chip wrap, Contact email button sizing, Navbar 44px tap areas | past tense everywhere; chat prompt states period + completed
 2026-10-08 | Remove all em dashes; octopus avatar.jpg replaces avatar.png | 19 src files, About.tsx, profile.ts, public/images | avatar frame is aspect-square + object-cover
 2026-10-08 | About section, bento Work, hidden orgs, reactive 3D hero shader | About, Work, Hero, HeroCanvas, page.tsx, lib/github/config.ts; -Manifesto, -ProjectArt | shader normals via dFdx/dFdy + cursor-following light; pointer listeners on window, disabled for reduced motion

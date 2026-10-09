@@ -12,15 +12,18 @@ const LINKS = [
 ];
 const EASE = [0.76, 0, 0.24, 1] as const;
 const HIDE_AFTER_PX = 160;
+const SOLID_AFTER_PX = 24;
 
 export default function Navbar() {
   const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
     setHidden(y > HIDE_AFTER_PX && y > prev);
+    setScrolled(y > SOLID_AFTER_PX);
   });
 
   useEffect(() => {
@@ -43,14 +46,17 @@ export default function Navbar() {
       <motion.nav
         aria-label="Primary"
         onFocusCapture={() => setHidden(false)}
-        className="fixed inset-x-0 top-0 z-[60] mix-blend-difference"
+        className={`fixed inset-x-0 top-0 z-[60] border-b transition-[background-color,border-color,backdrop-filter] duration-500 ${
+          scrolled && !open
+            ? "border-[var(--border)] bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] backdrop-blur-xl"
+            : "border-transparent bg-transparent"
+        }`}
         animate={{ y: hidden && !open ? "-110%" : "0%" }}
         transition={{ duration: 0.6, ease: EASE }}
       >
-        <div className="wrap flex items-center justify-between py-5 text-[#eeece7]">
+        <div className={`wrap flex items-center justify-between text-[#eeece7] transition-[padding] duration-500 ${scrolled ? "py-3.5" : "py-5"}`}>
           <a href="#top" className="display -my-3 py-3 text-xl tracking-tight" aria-label="Back to top">
-            N<span className="serif">D</span>
-            <sup className="ml-0.5 text-[0.55em] font-mono">©26</sup>
+            N<span className="serif text-[var(--ember)]">D</span>
           </a>
           <ul className="hidden items-center gap-8 md:flex">
             {LINKS.map((l, i) => (
