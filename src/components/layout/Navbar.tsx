@@ -13,10 +13,23 @@ const LINKS = [
 const EASE = [0.76, 0, 0.24, 1] as const;
 const HIDE_AFTER_PX = 160;
 const SOLID_AFTER_PX = 24;
+/* Collapse the desktop links into the hamburger once the hero has (almost) scrolled away. */
+const PAST_HERO_RATIO = 0.85;
+
+function Hamburger({ open }: { open: boolean }) {
+  const line = "absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]";
+  return (
+    <span aria-hidden className="relative block h-3 w-7">
+      <span className={`${line} top-0 ${open ? "translate-y-[5.25px] rotate-45" : ""}`} />
+      <span className={`${line} bottom-0 ${open ? "-translate-y-[5.25px] -rotate-45" : ""}`} />
+    </span>
+  );
+}
 
 export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
@@ -24,6 +37,7 @@ export default function Navbar() {
     const prev = scrollY.getPrevious() ?? 0;
     setHidden(y > HIDE_AFTER_PX && y > prev);
     setScrolled(y > SOLID_AFTER_PX);
+    setPastHero(y > window.innerHeight * PAST_HERO_RATIO);
   });
 
   useEffect(() => {
@@ -41,6 +55,8 @@ export default function Navbar() {
     };
   }, [open]);
 
+  const collapsed = pastHero || open;
+
   return (
     <>
       <motion.nav
@@ -54,31 +70,57 @@ export default function Navbar() {
         animate={{ y: hidden && !open ? "-110%" : "0%" }}
         transition={{ duration: 0.6, ease: EASE }}
       >
-        <div className={`wrap flex items-center justify-between text-[#eeece7] transition-[padding] duration-500 ${scrolled ? "py-3.5" : "py-5"}`}>
+        <div className={`wrap relative flex items-center justify-between text-[#eeece7] transition-[padding] duration-500 ${scrolled ? "py-3.5" : "py-5"}`}>
           <a href="#top" className="display -my-3 py-3 text-xl tracking-tight" aria-label="Back to top">
             N<span className="serif text-[var(--ember)]">D</span>
           </a>
-          <ul className="hidden items-center gap-8 md:flex">
-            {LINKS.map((l, i) => (
-              <li key={l.href}>
-                <a href={l.href} className="eyebrow link-u !text-[#eeece7]" data-cursor="hover">
-                  <span className="opacity-50">0{i + 1}</span> {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center gap-5">
-            <a href={personal.resume} target="_blank" rel="noopener" className="eyebrow link-u hidden !text-[#eeece7] sm:inline" data-cursor="hover">
+
+          {/* Desktop (lg+) links live only inside the hero; afterwards, and on smaller screens, the hamburger takes over. */}
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.ul
+                key="links"
+                className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 lg:flex"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4, ease: EASE }}
+              >
+                {LINKS.map((l, i) => (
+                  <li key={l.href}>
+                    <a href={l.href} className="eyebrow link-u !text-[#eeece7]" data-cursor="hover">
+                      <span className="opacity-50">0{i + 1}</span> {l.label}
+                    </a>
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+
+          {/* On lg+ Résumé and the hamburger share one grid cell and cross-fade in place. */}
+          <div className="flex items-center gap-6 lg:grid lg:justify-items-end lg:gap-0 lg:[grid-template-areas:'slot']">
+            <a
+              href={personal.resume}
+              target="_blank"
+              rel="noopener"
+              className={`eyebrow link-u hidden !text-[#eeece7] transition-[opacity,visibility] duration-300 sm:inline lg:[grid-area:slot] ${collapsed ? "lg:invisible lg:opacity-0" : ""}`}
+              data-cursor="hover"
+            >
               Résumé ↗
             </a>
             <button
               type="button"
-              className="eyebrow -m-3 p-3 !text-[#eeece7] md:hidden"
+              className={`-m-3 flex items-center gap-3 p-3 text-[#eeece7] transition-[opacity,visibility] duration-300 lg:[grid-area:slot] ${
+                collapsed ? "" : "lg:invisible lg:opacity-0"
+              }`}
               aria-expanded={open}
               aria-controls="mobile-menu"
+              aria-label={open ? "Close menu" : "Open menu"}
+              data-cursor="hover"
               onClick={() => setOpen((o) => !o)}
             >
-              {open ? "Close" : "Menu"}
+              <span className="eyebrow hidden !text-[#eeece7] md:inline">{open ? "Close" : "Menu"}</span>
+              <Hamburger open={open} />
             </button>
           </div>
         </div>
@@ -97,13 +139,13 @@ export default function Navbar() {
             exit={{ clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            <ul className="flex flex-col gap-2">
+            <ul className="wrap flex w-full flex-col gap-2 !px-0">
               {LINKS.map((l, i) => (
                 <li key={l.href} className="overflow-hidden">
                   <motion.a
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="display flex items-baseline gap-4 text-[13vw]"
+                    className="display flex items-baseline gap-4 text-[clamp(2.75rem,13vw,7.5rem)] transition-colors hover:text-[var(--ember)]"
                     initial={{ y: "100%" }}
                     animate={{ y: "0%" }}
                     transition={{ duration: 0.8, ease: EASE, delay: 0.2 + i * 0.06 }}
@@ -114,7 +156,7 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
-            <div className="mt-10 flex gap-6 eyebrow">
+            <div className="wrap mt-10 flex w-full gap-6 !px-0 eyebrow">
               <a href={personal.githubUrl} target="_blank" rel="noopener">GitHub</a>
               <a href={personal.linkedinUrl} target="_blank" rel="noopener">LinkedIn</a>
               <a href={personal.resume} target="_blank" rel="noopener">Résumé</a>
